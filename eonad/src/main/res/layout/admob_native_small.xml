@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ad_icon"
+            android:layout_width="42dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_height="42dp"
+            android:contentDescription="@null"
+            android:layout_gravity="center"
+            tools:src="@tools:sample/avatars"
+            android:layout_margin="8dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginVertical="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ad_headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:maxLines="1"
+                android:textStyle="bold"
+                tools:text="Ad Headline....." />
+
+            <TextView
+                android:id="@+id/ad_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                tools:text="Ad description.Ad description."/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/ad_call_to_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/call_to_action_bg"
+            android:layout_margin="8dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:minWidth="74dp"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            tools:text="CALL"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/ad_color"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="12sp"
+        android:text="@string/ad_top"
+        android:textColor="@color/ad_white" />
+
+</FrameLayout>

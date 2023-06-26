@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ad_top">AD</string>
+    <string name="loading_ads">Loading Ads..</string>
+    <string name="ad_error">Something went wrong while loading ads</string>
+</resources>
