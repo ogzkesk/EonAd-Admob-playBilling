@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.ogzkesk.ad.BuildConfig
 import com.ogzkesk.eonad.*
+import com.ogzkesk.eonad.ads.EonInterstitialAd
 
 private const val TAG = "EonAd-Ad-Package-Interstitial"
 

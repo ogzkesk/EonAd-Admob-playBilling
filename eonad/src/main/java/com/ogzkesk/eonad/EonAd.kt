@@ -1,43 +1,68 @@
 package com.ogzkesk.eonad
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.android.gms.ads.nativead.MediaView
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdView
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.ogzkesk.eonad.ads.*
 
 private const val TAG = "EonAd"
 
-class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
+class EonAd private constructor() {
 
-    private lateinit var appOpenAdManager: AppOpenAdManager
     private lateinit var provider: String
+    private lateinit var application: Application
     private var deviceTestIds: List<String> = emptyList()
 
+    // TODO bunu tek instance yapmayıpta REAL native adlar ile denersin. çift activityde dene destroy olayınıda ele al
+    private val nativeAd = EonNativeAd()
+    private val interstitialAd = EonInterstitialAd()
+    private val rewardedAd = EonRewardedAd()
+    private val bannerAd = EonBannerAd()
+    private val resumeAd = EonResumeAd()
+
     fun init(application: Application, config: EonAdConfig) {
-        MobileAds.initialize(application) {}
-        this.appOpenAdManager = AppOpenAdManager()
+
+        MobileAds.initialize(application)
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder()
+                .setTestDeviceIds(config.deviceTestIds)
+                .build()
+        )
+
         this.provider = config.provider
         this.deviceTestIds = config.deviceTestIds
+        this.application = application
     }
 
+    fun setResumeAd(adUnitId: String){
+        resumeAd.init(application,adUnitId)
+    }
+
+    fun disableResumeAd(){
+        resumeAd.disableResumeAds()
+    }
+
+    fun enableResumeAds(){
+        resumeAd.enableResumeAds()
+    }
+
+    fun disableResumeAdsOnClickEvent(){
+        resumeAd.disableResumeAdsOnClickEvent()
+    }
+
+    fun loadBannerAd(context: Context, adUnitId: String, adSize: BannerAdSize): View {
+        return bannerAd.loadBannerAd(context, adUnitId, adSize)
+    }
+
+    fun loadBannerAd(
+        context: Context,
+        adUnitId: String,
+        adSize: BannerAdSize,
+        eonAdCallback: EonAdCallback
+    ) {
+        bannerAd.loadBannerAd(context,adUnitId,adSize,eonAdCallback)
+    }
 
     fun loadNativeAd(
         context: Context,
@@ -45,7 +70,7 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
         eonAdCallback: EonAdCallback,
         multipleAdCount: Int = 1
     ) {
-        EonNativeAd().loadNativeAd(
+        nativeAd.loadNativeAd(
             adUnitId,
             context,
             multipleAdCount,
@@ -57,9 +82,9 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
         context: Context,
         adUnitId: String,
         multipleAdCount: Int = 1,
-        onNativeAdLoaded: (EonNativeAd) -> Unit
+        onNativeAdLoaded: (EonNativeAd) -> Unit,
     ) {
-        EonNativeAd().loadNativeAd(
+        nativeAd.loadNativeAd(
             adUnitId,
             context,
             multipleAdCount,
@@ -67,8 +92,25 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
         )
     }
 
+    fun loadNativeAdTemplate(
+        context: Context,
+        adUnitId: String,
+        type: NativeAdTemplateType,
+        multipleAdCount: Int = 1,
+        onNativeAdLoaded: (EonAdError?, View?) -> Unit,
+    ) {
+        nativeAd.loadNativeAdTemplate(
+            context,
+            adUnitId,
+            type,
+            multipleAdCount,
+            onNativeAdLoaded,
+        )
+    }
+
+
     fun loadRewardedAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
-        EonRewardedAd().loadRewardedAd(
+        rewardedAd.loadRewardedAd(
             context,
             adUnitId,
             eonAdCallback
@@ -76,12 +118,12 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
     }
 
     fun loadRewardedAd(context: Context, adUnitId: String) {
-        EonRewardedAd().loadRewardedAd(context,adUnitId)
+        rewardedAd.loadRewardedAd(context, adUnitId)
     }
 
 
     fun loadInterstitialAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
-        EonInterstitialAd().loadInterstitialAd(
+        interstitialAd.loadInterstitialAd(
             context,
             adUnitId,
             eonAdCallback
@@ -89,36 +131,7 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
     }
 
     fun loadInterstitialAd(context: Context, adUnitId: String) {
-        EonInterstitialAd().loadInterstitialAd(context,adUnitId)
-    }
-
-
-    override fun onActivityCreated(p0: Activity, p1: Bundle?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivityStarted(p0: Activity) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivityResumed(p0: Activity) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivityPaused(p0: Activity) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivityStopped(p0: Activity) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivityDestroyed(p0: Activity) {
-        TODO("Not yet implemented")
+        interstitialAd.loadInterstitialAd(context, adUnitId)
     }
 
 

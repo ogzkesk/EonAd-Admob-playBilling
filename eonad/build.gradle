@@ -49,13 +49,19 @@ dependencies {
     implementation "androidx.compose.animation:animation:1.4.3"
     implementation "androidx.compose.foundation:foundation:1.4.3"
     implementation "androidx.compose.runtime:runtime:1.4.3"
+    implementation "com.google.android.material:material:1.9.0"
 
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
 
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
-    implementation 'com.github.kazemihabib:compose-shimmer:1.0.1'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-common:2.6.1"
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.1'
 
 }
 

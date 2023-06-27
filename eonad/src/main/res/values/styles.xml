@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ShapeForMedium" parent="">
+        <item name="cornerSizeBottomLeft">10%</item>
+        <item name="cornerSizeTopLeft">10%</item>
+    </style>
+    <style name="ShapeForLarge" parent="">
+        <item name="cornerSize">4%</item>
+    </style>
+</resources>

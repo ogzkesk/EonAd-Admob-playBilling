@@ -8,7 +8,7 @@ import com.ogzkesk.ad.ad.showNativeAd
 import com.ogzkesk.ad.ad.showInterstitialAd
 import com.ogzkesk.ad.ad.showRewardedAd
 import com.ogzkesk.eonad.EonAdError
-import com.ogzkesk.eonad.EonInterstitialAd
+import com.ogzkesk.eonad.ads.EonInterstitialAd
 import com.ogzkesk.eonad.EonRewardedAdItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -39,6 +39,7 @@ android {
             buildConfigField "String", "ad_resume_id", "\"ca-app-pub-3940256099942544/3419835294\""
             buildConfigField "String", "ad_rewarded_id", "\"ca-app-pub-3940256099942544/5224354917\""
             buildConfigField "String", "ad_native_id", "\"ca-app-pub-3940256099942544/2247696110\""
+            buildConfigField "String", "ad_banner_id", "\"ca-app-pub-3940256099942544/6300978111\""
         }
         appReal{
             dimension = "1.0.0"
@@ -46,6 +47,7 @@ android {
             buildConfigField "String", "ad_resume_id", "\"ca-app-pub-9877606597346049/1465956184\""
             buildConfigField "String", "ad_rewarded_id", "\"ca-app-pub-9877606597346049/9203193017\""
             buildConfigField "String", "ad_native_id", "\"ca-app-pub-9877606597346049/8070429964\""
+            buildConfigField "String", "ad_banner_id", "\"ca-app-pub-9877606597346049/5850534691\""
         }
     }
 
@@ -103,8 +105,9 @@ dependencies {
     implementation "androidx.compose.ui:ui-viewbinding:1.4.3"
 
     implementation "com.google.dagger:hilt-android:2.46.1"
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     kapt "com.google.dagger:hilt-compiler:2.46.1"
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }

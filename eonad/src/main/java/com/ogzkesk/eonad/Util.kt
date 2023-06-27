@@ -3,8 +3,8 @@ package com.ogzkesk.eonad
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.rewarded.RewardItem
@@ -25,10 +25,9 @@ class EonAdError(private val error: AdError) {
 
 open class EonAds {
 
-    internal open var interstitialAd: InterstitialAd? = null
-    internal open var nativeAd: NativeAd? = null
-    internal open var rewardedAd: RewardedAd? = null
-
+    open var interstitialAd: InterstitialAd? = null
+    open var nativeAd: NativeAd? = null
+    open var rewardedAd: RewardedAd? = null
 }
 
 class EonRewardedAdItem(private val item: RewardItem) {
@@ -42,6 +41,100 @@ class EonRewardedAdItem(private val item: RewardItem) {
 
 }
 
-internal fun Context.showToast(@StringRes message: Int){
-    Toast.makeText(this,getString(message),Toast.LENGTH_SHORT).show()
+internal fun Context.showToast(@StringRes message: Int) {
+    Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show()
+}
+
+class BannerAdSize private constructor(
+    val width: Int,
+    val height: Int,
+    internal val adSize: AdSize
+) {
+
+    companion object {
+
+        val BANNER: BannerAdSize = BannerAdSize(350, 50,AdSize(0,0))
+        val FULL_BANNER: BannerAdSize = BannerAdSize(468, 60,AdSize(0,0))
+        val LARGE_BANNER: BannerAdSize = BannerAdSize(320, 100,AdSize(0,0))
+        val LEADERBOARD: BannerAdSize = BannerAdSize(728, 90,AdSize(0,0))
+        val MEDIUM_RECTANGLE: BannerAdSize = BannerAdSize(300, 250,AdSize(0,0))
+        val WIDE_SKYSCRAPER: BannerAdSize = BannerAdSize(160, 600,AdSize(0,0))
+        val FLUID: BannerAdSize = BannerAdSize(-3, -4,AdSize(0,0))
+        val INVALID: BannerAdSize = BannerAdSize(0, 0,AdSize(0,0))
+        val SEARCH: BannerAdSize = BannerAdSize(-3, 0,AdSize(0,0))
+        @Deprecated(message = "deprecated")
+        val SMART: BannerAdSize = BannerAdSize(-1, -2,AdSize(0,0))
+
+        fun getInlineAdaptiveBannerAdSize(width: Int, maxHeight: Int): BannerAdSize {
+            val adSize = AdSize.getInlineAdaptiveBannerAdSize(width, maxHeight)
+            return BannerAdSize(adSize.width, adSize.height,adSize)
+        }
+
+        fun getCurrentOrientationAnchoredAdaptiveBannerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getCurrentOrientationInlineAdaptiveBannerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getCurrentOrientationInterscrollerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getCurrentOrientationInterscrollerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getLandscapeAnchoredAdaptiveBannerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getLandscapeInlineAdaptiveBannerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getLandscapeInlineAdaptiveBannerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getLandscapeInterscrollerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getLandscapeInterscrollerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getPortraitAnchoredAdaptiveBannerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getPortraitInlineAdaptiveBannerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getPortraitInlineAdaptiveBannerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+
+        fun getPortraitInterscrollerAdSize(context: Context, width: Int): BannerAdSize {
+            val adSize = AdSize.getPortraitInterscrollerAdSize(context, width)
+            return BannerAdSize(adSize.width, adSize.height, adSize)
+        }
+    }
+}
+
+internal fun mapBannerAdSize(adSize: BannerAdSize): AdSize {
+    return when (adSize) {
+        BannerAdSize.BANNER -> AdSize.BANNER
+        BannerAdSize.FULL_BANNER -> AdSize.FULL_BANNER
+        BannerAdSize.LARGE_BANNER -> AdSize.LARGE_BANNER
+        BannerAdSize.LEADERBOARD -> AdSize.LEADERBOARD
+        BannerAdSize.MEDIUM_RECTANGLE -> AdSize.MEDIUM_RECTANGLE
+        BannerAdSize.WIDE_SKYSCRAPER -> AdSize.WIDE_SKYSCRAPER
+        BannerAdSize.FLUID -> AdSize.FLUID
+        BannerAdSize.INVALID -> AdSize.INVALID
+        BannerAdSize.SEARCH -> AdSize.SEARCH
+        BannerAdSize.SMART -> AdSize.SMART_BANNER
+        else -> adSize.adSize
+    }
+}
+
+enum class NativeAdTemplateType {
+    SMALL,
+    MEDIUM,
+    LARGE
 }

@@ -1,4 +1,4 @@
-package com.ogzkesk.eonad
+package com.ogzkesk.eonad.ads
 
 import android.app.Activity
 import android.content.Context
@@ -6,73 +6,70 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.WindowManager
 import android.widget.FrameLayout
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import kotlinx.coroutines.Runnable
-import java.util.concurrent.Delayed
+import com.ogzkesk.eonad.*
 
-private const val TAG = "EonInterstitialAd"
+private const val TAG = "EonRewardedAd"
 
-class EonInterstitialAd() : EonAds() {
+class EonRewardedAd() : EonAds() {
 
-    override var interstitialAd: InterstitialAd? = null
+    override var rewardedAd: RewardedAd? = null
 
-    internal fun loadInterstitialAd(
+    internal fun loadRewardedAd(
         context: Context,
         adUnitId: String,
         eonAdCallback: EonAdCallback
-    ) {
-        eonAdCallback.onLoading()
-        interFullScreenContentCallback(eonAdCallback)
-        val request = AdRequest.Builder().build()
-
+    ){
         val loadingView = (context as Activity).layoutInflater.inflate(
             R.layout.loading_ad, null
         ) as FrameLayout
         val rootView = context.findViewById(android.R.id.content) as ViewGroup
         rootView.addView(loadingView)
 
-        InterstitialAd.load(
+        eonAdCallback.onLoading()
+        rewardedFullScreenContentCallback(eonAdCallback)
+        val request = AdRequest.Builder().build()
+
+        RewardedAd.load(
             context,
             adUnitId,
             request,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    super.onAdFailedToLoad(error)
+            object : RewardedAdLoadCallback() {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    super.onAdFailedToLoad(p0)
+                    eonAdCallback.onAdFailedToLoad(EonAdError(p0))
                     rootView.removeView(loadingView)
-                    this@EonInterstitialAd.interstitialAd = null
-                    eonAdCallback.onAdFailedToLoad(EonAdError(error))
-                    context.showToast(R.string.ad_error)
-                    Log.d(TAG, "InterstitialAd Failed to Load :: ${error.message}")
+                    Log.d(TAG, "RewardedAd Failed to Load :: ${p0.message}")
                 }
 
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    super.onAdLoaded(interstitialAd)
-                    this@EonInterstitialAd.interstitialAd = interstitialAd
-                    eonAdCallback.onInterstitialAdLoaded(this@EonInterstitialAd)
-                    interstitialAd.show(context)
+                override fun onAdLoaded(rewardedAd: RewardedAd) {
+                    super.onAdLoaded(rewardedAd)
+                    Log.d(TAG, "RewardedAd Loaded:: $rewardedAd")
+
+                    this@EonRewardedAd.rewardedAd = rewardedAd
+                    eonAdCallback.onRewardedAdLoaded(this@EonRewardedAd)
+
+                    rewardedAd.show(context) { reward ->
+                        eonAdCallback.onRewardEarned(EonRewardedAdItem(reward))
+                    }
+
                     Handler(Looper.getMainLooper()).apply {
                         postDelayed({
                             rootView.removeView(loadingView)
                         }, 1_000)
                     }
-                    Log.d(TAG, "InterstitialAd Loaded")
                 }
             }
         )
     }
 
-    internal fun loadInterstitialAd(context: Context,adUnitId: String){
-
+    internal fun loadRewardedAd(context: Context, adUnitId: String){
         val loadingView = (context as Activity).layoutInflater.inflate(
             R.layout.loading_ad, null
         ) as FrameLayout
@@ -80,31 +77,32 @@ class EonInterstitialAd() : EonAds() {
         rootView.addView(loadingView)
 
         val request = AdRequest.Builder().build()
-        InterstitialAd.load(
+        RewardedAd.load(
             context,
             adUnitId,
             request,
-            object : InterstitialAdLoadCallback() {
+            object : RewardedAdLoadCallback() {
                 override fun onAdFailedToLoad(p0: LoadAdError) {
                     super.onAdFailedToLoad(p0)
                     rootView.removeView(loadingView)
                     context.showToast(R.string.ad_error)
                 }
 
-                override fun onAdLoaded(p0: InterstitialAd) {
+                override fun onAdLoaded(p0: RewardedAd) {
                     super.onAdLoaded(p0)
-                    p0.show(context)
+                    p0.show(context) {}
                     Handler(Looper.getMainLooper()).apply {
                         postDelayed({
                             rootView.removeView(loadingView)
                         }, 1_000)
                     }
                 }
-            })
+            }
+        )
     }
 
-    private fun interFullScreenContentCallback(callback: EonAdCallback) {
-        interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+    private fun rewardedFullScreenContentCallback(callback: EonAdCallback) {
+        rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 super.onAdClicked()
                 callback.onAdClicked()
@@ -133,3 +131,4 @@ class EonInterstitialAd() : EonAds() {
         }
     }
 }
+

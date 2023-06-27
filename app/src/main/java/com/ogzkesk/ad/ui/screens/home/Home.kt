@@ -25,6 +25,7 @@ import com.ogzkesk.ad.ui.SecondActivity
 import com.ogzkesk.ad.ui.navigation.Screen
 import com.ogzkesk.ad.ui.navigation.setup.navigator
 import com.ogzkesk.ad.ui.screens.splash.Splash
+import com.ogzkesk.eonad.EonAd
 import com.ogzkesk.eonad.ui.EonNativeAdView
 
 fun NavGraphBuilder.home() {
@@ -57,6 +58,7 @@ fun Home() {
 
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = {
+                EonAd.getInstance().disableResumeAdsOnClickEvent()
                 val intent = Intent(context, SecondActivity::class.java)
                 context.startActivity(intent)
                 (context as Activity).finish()
