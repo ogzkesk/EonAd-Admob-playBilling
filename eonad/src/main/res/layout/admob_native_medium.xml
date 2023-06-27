@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:shimmer_auto_start="true">
+
+        <include layout="@layout/shimmer_medium" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ad_view_container">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,10 +37,10 @@
                 android:id="@+id/ad_icon"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:contentDescription="@null"
+                android:foreground="?android:attr/selectableItemBackground"
                 tools:src="@tools:sample/avatars" />
 
             <LinearLayout
@@ -58,13 +75,14 @@
 
         </LinearLayout>
 
+
         <ImageView
             android:id="@+id/ad_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_marginHorizontal="8dp"
             android:adjustViewBounds="true"
+            android:foreground="?android:attr/selectableItemBackground"
             tools:src="@tools:sample/avatars" />
 
         <Button
@@ -92,4 +110,5 @@
         android:textColor="@color/ad_white"
         android:textSize="12sp" />
 
+    </FrameLayout>
 </FrameLayout>

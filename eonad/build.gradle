@@ -55,7 +55,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
 
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
-    implementation 'com.github.kazemihabib:compose-shimmer:1.0.1'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
 }
 

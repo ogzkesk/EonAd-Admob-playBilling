@@ -25,9 +25,9 @@ class EonAdError(private val error: AdError) {
 
 open class EonAds {
 
-    internal open var interstitialAd: InterstitialAd? = null
-    internal open var nativeAd: NativeAd? = null
-    internal open var rewardedAd: RewardedAd? = null
+    open var interstitialAd: InterstitialAd? = null
+    open var nativeAd: NativeAd? = null
+    open var rewardedAd: RewardedAd? = null
 
 }
 

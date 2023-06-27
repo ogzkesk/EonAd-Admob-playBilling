@@ -1,5 +1,7 @@
 package com.ogzkesk.eonad
 
+import android.view.View
+
 
 interface EonAdCallback {
 

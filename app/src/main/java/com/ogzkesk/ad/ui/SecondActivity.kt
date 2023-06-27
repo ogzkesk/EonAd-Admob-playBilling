@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.ogzkesk.ad.BuildConfig
 import com.ogzkesk.ad.R
 import com.ogzkesk.ad.databinding.ActivitySecondBinding
@@ -11,31 +12,54 @@ import com.ogzkesk.eonad.*
 
 class SecondActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivitySecondBinding
+    private lateinit var binding: ActivitySecondBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        EonAd.getInstance().loadNativeAd(this, BuildConfig.ad_native_id){ nativeAd ->
-            val adView = nativeAd.populateLargeNativeView(this@SecondActivity)
-            binding.flNativeAdContainer.removeAllViews()
-            binding.flNativeAdContainer.addView(adView)
+        EonAd.getInstance().loadNativeAdTemplate(
+            context = this,
+            adUnitId = BuildConfig.ad_native_id,
+            type = NativeAdTemplateType.LARGE, // set one of them SMALL,MEDIUM,LARGE
+            onNativeAdLoaded = { error, view ->
+
+                if(error != null){
+                    // handle error
+                    return@loadNativeAdTemplate
+                }
+
+                binding.flNativeAdContainer.removeAllViews()
+                binding.flNativeAdContainer.addView(view)
+            }
+        )
+
+        EonAd.getInstance().loadNativeAd(this, BuildConfig.ad_native_id) { ad ->
+            ad.nativeAd?.let {
+                // update your own ui
+            }
         }
 
-        binding.btnFirstActivity.setOnClickListener {
-//            val intent = Intent(this,MainActivity::class.java)
-//            startActivity(intent)
-//            finish()
-            EonAd.getInstance().loadInterstitialAd(this, BuildConfig.ad_interstitial_id)
-        }
+        EonAd.getInstance().loadNativeAd(this,BuildConfig.ad_native_id,object : EonAdCallback {
+            override fun onLoading() {
+                super.onLoading()
+            }
 
-        binding.btnSecond.setOnClickListener {
-//            val intent = Intent(this,MainActivity::class.java)
-//            startActivity(intent)
-//            finish()
-            EonAd.getInstance().loadRewardedAd(this, BuildConfig.ad_rewarded_id)
-        }
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(error: EonAdError) {
+                super.onAdFailedToLoad(error)
+            }
+
+            override fun onNativeAdLoaded(eonNativeAd: EonNativeAd) {
+                super.onNativeAdLoaded(eonNativeAd)
+                eonNativeAd.nativeAd?.let {
+                    // update your ui
+                }
+            }
+        })
     }
 }

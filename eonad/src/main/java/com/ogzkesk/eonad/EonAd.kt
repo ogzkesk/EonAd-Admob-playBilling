@@ -27,9 +27,13 @@ private const val TAG = "EonAd"
 
 class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
 
+    // TODOS -- > image cornerslerini değiştir. -> medium templateti değiştir -> banner ad yap -> sonra resume...
     private lateinit var appOpenAdManager: AppOpenAdManager
     private lateinit var provider: String
     private var deviceTestIds: List<String> = emptyList()
+    private val nativeAd = EonNativeAd() // TODO bunu tek instance yapmayıpta REAL native adlar ile denersin. çift activityde dene destroy olayınıda ele al
+    private val interstitialAd = EonInterstitialAd()
+    private val rewardedAd = EonRewardedAd()
 
     fun init(application: Application, config: EonAdConfig) {
         MobileAds.initialize(application) {}
@@ -45,7 +49,7 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
         eonAdCallback: EonAdCallback,
         multipleAdCount: Int = 1
     ) {
-        EonNativeAd().loadNativeAd(
+        nativeAd.loadNativeAd(
             adUnitId,
             context,
             multipleAdCount,
@@ -57,9 +61,9 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
         context: Context,
         adUnitId: String,
         multipleAdCount: Int = 1,
-        onNativeAdLoaded: (EonNativeAd) -> Unit
+        onNativeAdLoaded: (EonNativeAd) -> Unit,
     ) {
-        EonNativeAd().loadNativeAd(
+        nativeAd.loadNativeAd(
             adUnitId,
             context,
             multipleAdCount,
@@ -67,8 +71,24 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
         )
     }
 
+    fun loadNativeAdTemplate(
+        context: Context,
+        adUnitId: String,
+        type: NativeAdTemplateType,
+        multipleAdCount: Int = 1,
+        onNativeAdLoaded: (EonAdError?,View?) -> Unit,
+    ) {
+        nativeAd.loadNativeAdTemplate(
+            context,
+            adUnitId,
+            type,
+            multipleAdCount,
+            onNativeAdLoaded,
+        )
+    }
+
     fun loadRewardedAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
-        EonRewardedAd().loadRewardedAd(
+        rewardedAd.loadRewardedAd(
             context,
             adUnitId,
             eonAdCallback
@@ -76,12 +96,12 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
     }
 
     fun loadRewardedAd(context: Context, adUnitId: String) {
-        EonRewardedAd().loadRewardedAd(context,adUnitId)
+        rewardedAd.loadRewardedAd(context, adUnitId)
     }
 
 
     fun loadInterstitialAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
-        EonInterstitialAd().loadInterstitialAd(
+        interstitialAd.loadInterstitialAd(
             context,
             adUnitId,
             eonAdCallback
@@ -89,7 +109,7 @@ class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
     }
 
     fun loadInterstitialAd(context: Context, adUnitId: String) {
-        EonInterstitialAd().loadInterstitialAd(context,adUnitId)
+        interstitialAd.loadInterstitialAd(context, adUnitId)
     }
 
 
