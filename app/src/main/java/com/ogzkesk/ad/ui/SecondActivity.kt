@@ -19,22 +19,47 @@ class SecondActivity : AppCompatActivity() {
         binding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bannerView = EonAd.getInstance().loadBannerAd(
+        EonAd.getInstance().loadNativeAdTemplate(
             context = this,
-            adUnitId = BuildConfig.ad_banner_id,
-            adSize = BannerAdSize.BANNER
+            adUnitId = BuildConfig.ad_native_id,
+            type = NativeAdTemplateType.LARGE, // set one of them SMALL,MEDIUM,LARGE
+            onNativeAdLoaded = { error, view ->
+
+                if(error != null){
+                    // handle error
+                    return@loadNativeAdTemplate
+                }
+
+                binding.flNativeAdContainer.removeAllViews()
+                binding.flNativeAdContainer.addView(view)
+            }
         )
-        binding.flNativeAdContainer.removeAllViews()
-        binding.flNativeAdContainer.addView(bannerView)
 
-        binding.btnFirstActivity.text = "ENABLE RESUME ADS"
-        binding.btnSecond.text = "DISABLE RESUME ADS"
+        EonAd.getInstance().loadNativeAd(this, BuildConfig.ad_native_id) { ad ->
+            ad.nativeAd?.let {
+                // update your own ui
+            }
+        }
 
-        binding.btnFirstActivity.setOnClickListener {
-            EonAd.getInstance().enableResumeAds()
-        }
-        binding.btnSecond.setOnClickListener {
-            EonAd.getInstance().disableResumeAd()
-        }
+        EonAd.getInstance().loadNativeAd(this,BuildConfig.ad_native_id,object : EonAdCallback {
+            override fun onLoading() {
+                super.onLoading()
+            }
+
+            override fun onAdClicked() {
+                super.onAdClicked()
+            }
+
+            override fun onAdFailedToLoad(error: EonAdError) {
+                super.onAdFailedToLoad(error)
+            }
+
+            override fun onNativeAdLoaded(eonNativeAd: EonNativeAd) {
+                super.onNativeAdLoaded(eonNativeAd)
+                eonNativeAd.nativeAd?.let {
+                    // update your ui
+                }
+            }
+        })
     }
 }

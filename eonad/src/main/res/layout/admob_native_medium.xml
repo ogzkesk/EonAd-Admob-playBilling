@@ -18,129 +18,97 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <FrameLayout
-        android:id="@+id/ad_view_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/ad_view_container">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5">
+            <ImageView
+                android:id="@+id/ad_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:contentDescription="@null"
+                android:foreground="?android:attr/selectableItemBackground"
+                tools:src="@tools:sample/avatars" />
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/ad_icon"
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
-                            android:layout_margin="8dp"
-                            android:contentDescription="@null"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            tools:src="@tools:sample/avatars" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="8dp"
-                            android:layout_marginEnd="4dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/ad_headline"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:foreground="?android:attr/selectableItemBackground"
-                                android:maxLines="1"
-                                android:textStyle="bold"
-                                tools:text="Ad Headline....." />
-
-                            <TextView
-                                android:id="@+id/ad_advertiser"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:maxLines="1"
-                                android:textColor="@color/ad_color"
-                                android:textSize="14sp"
-                                android:textStyle="normal"
-                                tools:text="www.example.com.." />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-
-                        <TextView
-                            android:id="@+id/ad_body"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:textSize="13sp"
-                            android:layout_margin="8dp"
-                            android:maxLines="3"
-                            tools:text="Ad description body.." />
-
-                        <Button
-                            android:id="@+id/ad_call_to_action"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_margin="8dp"
-                            android:background="@drawable/call_to_action_bg"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            android:minWidth="74dp"
-                            android:padding="8dp"
-                            android:textColor="@color/ad_white"
-                            android:textStyle="bold"
-                            tools:text="INSTALL" />
-
-                    </FrameLayout>
-
-                </LinearLayout>
-
-            </FrameLayout>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ad_image"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:maxHeight="180dp"
-                android:minHeight="160dp"
-                app:shapeAppearance="@style/ShapeForMedium"
-                android:adjustViewBounds="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/avatars" />
+                android:layout_marginVertical="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/ad_headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    tools:text="Ad Headline....." />
+
+                <TextView
+                    android:id="@+id/ad_advertiser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="@color/ad_color"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    tools:text="www.example.com.." />
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+
+        <ImageView
+            android:id="@+id/ad_image"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/ad_color"
-            android:paddingHorizontal="4dp"
-            android:paddingVertical="2dp"
-            android:text="@string/ad_top"
-            android:textColor="@color/ad_white"
-            android:textSize="12sp" />
+            android:layout_marginHorizontal="8dp"
+            android:adjustViewBounds="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            tools:src="@tools:sample/avatars" />
+
+        <Button
+            android:id="@+id/ad_call_to_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/call_to_action_bg"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:minWidth="74dp"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:text="CALL" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/ad_color"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:text="@string/ad_top"
+        android:textColor="@color/ad_white"
+        android:textSize="12sp" />
 
     </FrameLayout>
 </FrameLayout>

@@ -1,68 +1,47 @@
 package com.ogzkesk.eonad
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.google.android.gms.ads.*
-import com.ogzkesk.eonad.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 private const val TAG = "EonAd"
 
-class EonAd private constructor() {
+class EonAd private constructor() : Application.ActivityLifecycleCallbacks {
 
+    // TODOS -- > image cornerslerini değiştir. -> medium templateti değiştir -> banner ad yap -> sonra resume...
+    private lateinit var appOpenAdManager: AppOpenAdManager
     private lateinit var provider: String
-    private lateinit var application: Application
     private var deviceTestIds: List<String> = emptyList()
-
-    // TODO bunu tek instance yapmayıpta REAL native adlar ile denersin. çift activityde dene destroy olayınıda ele al
-    private val nativeAd = EonNativeAd()
+    private val nativeAd = EonNativeAd() // TODO bunu tek instance yapmayıpta REAL native adlar ile denersin. çift activityde dene destroy olayınıda ele al
     private val interstitialAd = EonInterstitialAd()
     private val rewardedAd = EonRewardedAd()
-    private val bannerAd = EonBannerAd()
-    private val resumeAd = EonResumeAd()
 
     fun init(application: Application, config: EonAdConfig) {
-
-        MobileAds.initialize(application)
-        MobileAds.setRequestConfiguration(
-            RequestConfiguration.Builder()
-                .setTestDeviceIds(config.deviceTestIds)
-                .build()
-        )
-
+        MobileAds.initialize(application) {}
+        this.appOpenAdManager = AppOpenAdManager()
         this.provider = config.provider
         this.deviceTestIds = config.deviceTestIds
-        this.application = application
     }
 
-    fun setResumeAd(adUnitId: String){
-        resumeAd.init(application,adUnitId)
-    }
-
-    fun disableResumeAd(){
-        resumeAd.disableResumeAds()
-    }
-
-    fun enableResumeAds(){
-        resumeAd.enableResumeAds()
-    }
-
-    fun disableResumeAdsOnClickEvent(){
-        resumeAd.disableResumeAdsOnClickEvent()
-    }
-
-    fun loadBannerAd(context: Context, adUnitId: String, adSize: BannerAdSize): View {
-        return bannerAd.loadBannerAd(context, adUnitId, adSize)
-    }
-
-    fun loadBannerAd(
-        context: Context,
-        adUnitId: String,
-        adSize: BannerAdSize,
-        eonAdCallback: EonAdCallback
-    ) {
-        bannerAd.loadBannerAd(context,adUnitId,adSize,eonAdCallback)
-    }
 
     fun loadNativeAd(
         context: Context,
@@ -97,7 +76,7 @@ class EonAd private constructor() {
         adUnitId: String,
         type: NativeAdTemplateType,
         multipleAdCount: Int = 1,
-        onNativeAdLoaded: (EonAdError?, View?) -> Unit,
+        onNativeAdLoaded: (EonAdError?,View?) -> Unit,
     ) {
         nativeAd.loadNativeAdTemplate(
             context,
@@ -107,7 +86,6 @@ class EonAd private constructor() {
             onNativeAdLoaded,
         )
     }
-
 
     fun loadRewardedAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
         rewardedAd.loadRewardedAd(
@@ -132,6 +110,35 @@ class EonAd private constructor() {
 
     fun loadInterstitialAd(context: Context, adUnitId: String) {
         interstitialAd.loadInterstitialAd(context, adUnitId)
+    }
+
+
+    override fun onActivityCreated(p0: Activity, p1: Bundle?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onActivityStarted(p0: Activity) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onActivityResumed(p0: Activity) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onActivityPaused(p0: Activity) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onActivityStopped(p0: Activity) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onActivityDestroyed(p0: Activity) {
+        TODO("Not yet implemented")
     }
 
 
