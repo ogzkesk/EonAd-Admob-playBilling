@@ -17,21 +17,21 @@ import com.ogzkesk.eonad.*
 
 private const val TAG = "EonInterstitialAd"
 
-class EonInterstitialAd() : EonAds() {
+class EonInterstitialAd() {
 
-    override var interstitialAd: InterstitialAd? = null
+    var interstitialAd: InterstitialAd? = null
 
     internal fun loadInterstitialAd(
         context: Context,
         adUnitId: String,
         eonAdCallback: EonAdCallback
     ) {
+        val root : ViewGroup? = null
         eonAdCallback.onLoading()
-        interFullScreenContentCallback(eonAdCallback)
         val request = AdRequest.Builder().build()
 
         val loadingView = (context as Activity).layoutInflater.inflate(
-            R.layout.loading_ad, null
+            R.layout.loading_ad, root
         ) as FrameLayout
         val rootView = context.findViewById(android.R.id.content) as ViewGroup
         rootView.addView(loadingView)
@@ -54,6 +54,7 @@ class EonInterstitialAd() : EonAds() {
                     super.onAdLoaded(interstitialAd)
                     this@EonInterstitialAd.interstitialAd = interstitialAd
                     eonAdCallback.onInterstitialAdLoaded(this@EonInterstitialAd)
+                    interFullScreenContentCallback(eonAdCallback)
                     interstitialAd.show(context)
                     Handler(Looper.getMainLooper()).apply {
                         postDelayed({
@@ -67,9 +68,9 @@ class EonInterstitialAd() : EonAds() {
     }
 
     internal fun loadInterstitialAd(context: Context,adUnitId: String){
-
+        val root : ViewGroup? = null
         val loadingView = (context as Activity).layoutInflater.inflate(
-            R.layout.loading_ad, null
+            R.layout.loading_ad, root
         ) as FrameLayout
         val rootView = context.findViewById(android.R.id.content) as ViewGroup
         rootView.addView(loadingView)

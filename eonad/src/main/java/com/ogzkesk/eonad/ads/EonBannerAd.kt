@@ -2,7 +2,12 @@ package com.ogzkesk.eonad.ads
 
 import android.content.Context
 import android.view.View
-import com.google.android.gms.ads.*
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.ogzkesk.eonad.BannerAdSize
 import com.ogzkesk.eonad.EonAdCallback
 import com.ogzkesk.eonad.EonAdError

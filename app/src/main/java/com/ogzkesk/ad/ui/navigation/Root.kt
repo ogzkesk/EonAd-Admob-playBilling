@@ -1,12 +1,17 @@
 package com.ogzkesk.ad.ui.navigation
 
-import android.provider.DocumentsContract.Root
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraphBuilder
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.ogzkesk.ad.ui.navigation.setup.ProvideNavHost
-import com.ogzkesk.ad.ui.screens.home.home
+import com.ogzkesk.ad.ui.screens.banner.banner
+import com.ogzkesk.ad.ui.screens.home.native
+import com.ogzkesk.ad.ui.screens.products.products
 import com.ogzkesk.ad.ui.screens.splash.splash
 
 
@@ -21,7 +26,14 @@ fun Root() {
             startDestination = Screen.Home.route
         ){
             splash()
-            home()
+            native()
+            banner()
+            products()
         }
     }
+}
+
+
+fun LazyListScope.space(height: Int) {
+    item { Spacer(modifier = Modifier.height(height = height.dp)) }
 }

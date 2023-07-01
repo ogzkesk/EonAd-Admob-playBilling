@@ -9,40 +9,37 @@ import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
-import com.ogzkesk.eonad.EonAdCallback
-import com.ogzkesk.eonad.EonAdError
-import com.ogzkesk.eonad.EonAds
-import com.ogzkesk.eonad.NativeAdTemplateType
+import com.ogzkesk.eonad.*
 import com.ogzkesk.eonad.ui.NativeAdUi
 
 private const val TAG = "EonNativeAd"
 
-class EonNativeAd() : EonAds() {
+class EonNativeAd {
 
-    override var nativeAd: NativeAd? = null
+    var nativeAd: NativeAd? = null
 
     internal fun loadNativeAdTemplate(
         context: Context,
         adUnitId: String,
-        type: NativeAdTemplateType,
+        type: NativeAdTemplate,
         multipleAdCount: Int = 1,
-        onNativeAdViewLoaded: (EonAdError?, View?) -> Unit,
+        onNativeAdViewLoaded: (View) -> Unit,
+        onFailedToLoad: ((EonAdError) -> Unit)? = null
     ) {
-        val loadingUi = NativeAdUi(nativeAd).getNativeUi(context,type)
-        onNativeAdViewLoaded(null,loadingUi)
+        val loadingUi = NativeAdUi(nativeAd).getNativeUi(context, type)
+        onNativeAdViewLoaded(loadingUi)
 
         loadNativeAd(adUnitId, context, multipleAdCount, object : EonAdCallback {
 
             override fun onAdFailedToLoad(error: EonAdError) {
                 super.onAdFailedToLoad(error)
-                onNativeAdViewLoaded(error, null)
+                onFailedToLoad?.invoke(error)
             }
 
             override fun onNativeAdLoaded(eonNativeAd: EonNativeAd) {
                 super.onNativeAdLoaded(eonNativeAd)
                 onNativeAdViewLoaded(
-                    null,
-                    NativeAdUi(eonNativeAd.nativeAd).getNativeUi(context,type)
+                    NativeAdUi(eonNativeAd.nativeAd).getNativeUi(context, type)
                 )
             }
         })
@@ -62,7 +59,7 @@ class EonNativeAd() : EonAds() {
                 eonAdCallback.onNativeAdLoaded(this@EonNativeAd)
 
                 if ((context as Activity).isDestroyed) {
-                    Log.d(TAG,"nativeAd Destroyed")
+                    Log.d(TAG, "nativeAd Destroyed")
                     this.nativeAd = null
                     ad.destroy()
                     return@forNativeAd
@@ -132,7 +129,7 @@ class EonNativeAd() : EonAds() {
                 onNativeAdLoaded.invoke(this@EonNativeAd)
 
                 if ((context as Activity).isDestroyed) {
-                    Log.d(TAG,"nativeAd Destroyed")
+                    Log.d(TAG, "nativeAd Destroyed")
                     this@EonNativeAd.nativeAd = null
                     ad.destroy()
                 }

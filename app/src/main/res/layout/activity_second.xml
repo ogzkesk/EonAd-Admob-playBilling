@@ -8,54 +8,95 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
 
+        <FrameLayout
+            android:id="@+id/native_small_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="asdasdsdsd" />
+        <FrameLayout
+            android:id="@+id/native_medium_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp" />
 
-    <FrameLayout
-        android:id="@+id/fl_native_ad_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        />
+        <FrameLayout
+            android:id="@+id/native_large_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp" />
 
-    <FrameLayout
-        android:id="@+id/fl_native_ad_container2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        />
+        <Button
+            android:id="@+id/btn_show_interstitial_ad"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Show Interstitial Ad" />
 
-    <FrameLayout
-        android:id="@+id/fl_native_ad_container3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        />
+        <Button
+            android:id="@+id/btn_show_rewarded_ad"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Show Rewarded Ad" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/btn_first_activity"
-        android:text="First Ad"/>
+        <Button
+            android:id="@+id/btn_enable_resume_ads"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Enable Resume Ads" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/btn_second"
-        android:text="SecondAd Activity"/>
+        <Button
+            android:id="@+id/btn_disable_resume_ads"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Disable Resume Ads" />
+
+        <Button
+            android:id="@+id/btn_disable_resume_on_click"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Disable Resume Ads OnClick Event" />
+
+        <Button
+            android:id="@+id/btn_show_native_ads"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Show Native Ads" />
+
+        <Button
+            android:id="@+id/btn_show_banner_ads"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Show Banner Ads" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:id="@+id/banner1_container"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:id="@+id/banner2_container"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:id="@+id/banner3_container"/>
+
 
     </LinearLayout>
 

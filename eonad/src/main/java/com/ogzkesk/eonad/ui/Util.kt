@@ -1,5 +1,6 @@
 package com.ogzkesk.eonad.ui
 
+import android.view.View
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

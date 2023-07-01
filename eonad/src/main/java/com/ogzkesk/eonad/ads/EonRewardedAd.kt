@@ -17,23 +17,23 @@ import com.ogzkesk.eonad.*
 
 private const val TAG = "EonRewardedAd"
 
-class EonRewardedAd() : EonAds() {
+class EonRewardedAd() {
 
-    override var rewardedAd: RewardedAd? = null
+    var rewardedAd: RewardedAd? = null
 
     internal fun loadRewardedAd(
         context: Context,
         adUnitId: String,
         eonAdCallback: EonAdCallback
     ){
+        val root : ViewGroup? = null
         val loadingView = (context as Activity).layoutInflater.inflate(
-            R.layout.loading_ad, null
+            R.layout.loading_ad, root
         ) as FrameLayout
         val rootView = context.findViewById(android.R.id.content) as ViewGroup
         rootView.addView(loadingView)
 
         eonAdCallback.onLoading()
-        rewardedFullScreenContentCallback(eonAdCallback)
         val request = AdRequest.Builder().build()
 
         RewardedAd.load(
@@ -54,8 +54,10 @@ class EonRewardedAd() : EonAds() {
 
                     this@EonRewardedAd.rewardedAd = rewardedAd
                     eonAdCallback.onRewardedAdLoaded(this@EonRewardedAd)
+                    rewardedFullScreenContentCallback(eonAdCallback)
 
                     rewardedAd.show(context) { reward ->
+                        Log.d(TAG, "RewardedAd Loaded:: $rewardedAd")
                         eonAdCallback.onRewardEarned(EonRewardedAdItem(reward))
                     }
 
@@ -70,8 +72,9 @@ class EonRewardedAd() : EonAds() {
     }
 
     internal fun loadRewardedAd(context: Context, adUnitId: String){
+        val root : ViewGroup? = null
         val loadingView = (context as Activity).layoutInflater.inflate(
-            R.layout.loading_ad, null
+            R.layout.loading_ad, root
         ) as FrameLayout
         val rootView = context.findViewById(android.R.id.content) as ViewGroup
         rootView.addView(loadingView)

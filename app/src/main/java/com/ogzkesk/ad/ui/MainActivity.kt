@@ -1,9 +1,11 @@
 package com.ogzkesk.ad.ui
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.ogzkesk.ad.ui.navigation.Root
 import com.ogzkesk.ad.ui.theme.AdTheme
 import com.ogzkesk.eonad.*
@@ -14,40 +16,54 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val bannerView = EonAd.getInstance().loadBannerAd(
-            this,
-            "",
-            BannerAdSize.BANNER
-        )
-
-        EonAd.getInstance().loadBannerAd(
-            context = this,
-            adUnitId = com.ogzkesk.ad.BuildConfig.ad_native_id,
-            adSize = BannerAdSize.BANNER,
-            eonAdCallback = object : EonAdCallback {
-                override fun onAdClicked() {
-                    super.onAdClicked()
-                }
-
-                override fun onBannerAdLoaded(bannerAdView: View) {
-                    super.onBannerAdLoaded(bannerAdView)
-                    // updateUi
-                }
-
-                override fun onLoading() {
-                    super.onLoading()
-
-                }
-            }
-        )
-
-
-
+        println("Mactivity :: onCreate")
         setContent {
             AdTheme {
                 Root()
             }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        println("Mactivity :: onStart")
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("Mactivity :: onResume")
+
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        println("Mactivity :: onPostResume")
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        println("Mactivity :: onStop")
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        println("Mactivity :: onSavedInstance")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        println("Mactivity :: onRestart")
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        println("Mactivity :: onDestroy")
+    }
+
 }

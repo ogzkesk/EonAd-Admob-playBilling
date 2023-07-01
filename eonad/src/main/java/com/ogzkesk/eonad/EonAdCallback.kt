@@ -1,6 +1,9 @@
 package com.ogzkesk.eonad
 
 import android.view.View
+import com.ogzkesk.eonad.ads.EonInterstitialAd
+import com.ogzkesk.eonad.ads.EonNativeAd
+import com.ogzkesk.eonad.ads.EonRewardedAd
 
 
 interface EonAdCallback {
@@ -65,6 +68,16 @@ interface EonAdCallback {
     }
 
     fun onAdSwipeGestureClicked(){
+
+    }
+
+    // ----- banner -----
+
+    fun onBannerAdLoaded(bannerView: View){
+
+    }
+
+    fun onBannerAdOpened(){
 
     }
 
