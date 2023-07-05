@@ -5,12 +5,16 @@ import android.content.Context
 import android.view.View
 import com.google.android.gms.ads.MobileAds
 import com.ogzkesk.eonad.ads.*
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "EonAd"
 
 class EonAd private constructor() {
 
     private lateinit var application: Application
+    private var interstitialInterval = System.currentTimeMillis()
+    private var firstTimeToLoadInterval = true
+
     private val nativeAd = EonNativeAd()
     private val interstitialAd = EonInterstitialAd()
     private val rewardedAd = EonRewardedAd()
@@ -121,6 +125,54 @@ class EonAd private constructor() {
 
     fun loadInterstitialAd(context: Context, adUnitId: String) {
         interstitialAd.loadInterstitialAd(context, adUnitId)
+    }
+
+
+
+    fun loadInterstitialAdWithInterval(
+        context: Context,
+        adUnitId: String,
+        interval : Long
+    ){
+        if(firstTimeToLoadInterval){
+            firstTimeToLoadInterval = false
+            interstitialInterval = System.currentTimeMillis()
+            interstitialAd.loadInterstitialAd(context,adUnitId)
+            return
+        }
+
+        val sInterval = TimeUnit.MILLISECONDS.toSeconds(interval)
+        val interstitialTime = TimeUnit.MILLISECONDS.toSeconds(interstitialInterval)
+        val currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+
+        if(currentTime - sInterval > interstitialTime){
+            interstitialInterval = System.currentTimeMillis()
+            interstitialAd.loadInterstitialAd(context,adUnitId)
+        }
+    }
+
+    fun loadInterstitialAdWithInterval(
+        context: Context,
+        adUnitId: String,
+        interval : Long,
+        eonAdCallback: EonAdCallback
+    ){
+        if(firstTimeToLoadInterval){
+            firstTimeToLoadInterval = false
+            interstitialInterval = System.currentTimeMillis()
+            interstitialAd.loadInterstitialAd(context,adUnitId,eonAdCallback)
+            return
+        }
+
+        val sInterval = TimeUnit.MILLISECONDS.toSeconds(interval)
+        val interstitialTime = TimeUnit.MILLISECONDS.toSeconds(interstitialInterval)
+        val currentTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+
+        if(currentTime - sInterval > interstitialTime){
+            interstitialInterval = System.currentTimeMillis()
+            interstitialAd.loadInterstitialAd(context,adUnitId,eonAdCallback)
+        }
+
     }
 
 

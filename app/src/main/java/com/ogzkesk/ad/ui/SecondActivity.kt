@@ -60,7 +60,11 @@ class SecondActivity : AppCompatActivity() {
 
             btnShowInterstitialAd.setOnClickListener {
                 EonAd.getInstance()
-                    .loadInterstitialAd(this@SecondActivity, BuildConfig.ad_interstitial_id)
+                    .loadInterstitialAdWithInterval(
+                        this@SecondActivity,
+                        BuildConfig.ad_interstitial_id,
+                        40_000
+                    )
             }
 
             btnShowRewardedAd.setOnClickListener {

@@ -20,16 +20,17 @@ import com.ogzkesk.eonad.EonAdCallback
 import com.ogzkesk.eonad.EonAdError
 import com.ogzkesk.eonad.EonRewardedAdItem
 import com.ogzkesk.eonad.ads.EonRewardedAd
+import java.util.concurrent.TimeUnit
 
 @Composable
-fun Tool(onLoadNativeTemplatesClick: () -> Unit){
+fun Tool(onLoadNativeTemplatesClick: () -> Unit) {
 
     val context = LocalContext.current
     val navigator = navigator
 
     var resumeAdsEnabled by remember { mutableStateOf(true) }
-    LaunchedEffect(resumeAdsEnabled){
-        if(resumeAdsEnabled){
+    LaunchedEffect(resumeAdsEnabled) {
+        if (resumeAdsEnabled) {
             println("resumeAds Enabled girdi")
             EonAd.getInstance().enableResumeAds()
         } else {
@@ -45,19 +46,23 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit){
     ) {
 
         Button(onClick = {
-            EonAd.getInstance().loadInterstitialAd(context, BuildConfig.ad_interstitial_id,object : EonAdCallback{
-                override fun onLoading() {
-                    super.onLoading()
-                    println("onAdLoading")
-                    resumeAdsEnabled = false
-                }
+            EonAd.getInstance().loadInterstitialAdWithInterval(
+                context,
+                BuildConfig.ad_interstitial_id,
+                30_000,
+                object : EonAdCallback {
+                    override fun onLoading() {
+                        super.onLoading()
+                        println("onAdLoading")
+                        resumeAdsEnabled = false
+                    }
 
-                override fun onAdClosed() {
-                    super.onAdClosed()
-                    println("onAdClosed")
-                    resumeAdsEnabled = true
-                }
-            })
+                    override fun onAdClosed() {
+                        super.onAdClosed()
+                        println("onAdClosed")
+                        resumeAdsEnabled = true
+                    }
+                })
         }) {
             Text(text = "Show Interstitial")
         }
@@ -65,19 +70,20 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit){
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            EonAd.getInstance().loadRewardedAd(context, BuildConfig.ad_rewarded_id,object: EonAdCallback{
-                override fun onLoading() {
-                    super.onLoading()
-                    println("onRewardedOnLoading.")
-                    resumeAdsEnabled = false
-                }
+            EonAd.getInstance()
+                .loadRewardedAd(context, BuildConfig.ad_rewarded_id, object : EonAdCallback {
+                    override fun onLoading() {
+                        super.onLoading()
+                        println("onRewardedOnLoading.")
+                        resumeAdsEnabled = false
+                    }
 
-                override fun onAdClosed() {
-                    super.onAdClosed()
-                    println("onAdClosed")
-                    resumeAdsEnabled = true
-                }
-            })
+                    override fun onAdClosed() {
+                        super.onAdClosed()
+                        println("onAdClosed")
+                        resumeAdsEnabled = true
+                    }
+                })
         }) {
             Text(text = "Show Rewarded")
         }
@@ -102,7 +108,7 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit){
 
         Button(onClick = {
             EonAd.getInstance().disableResumeAdsOnClickEvent()
-            val intent = Intent(Intent.ACTION_VIEW,"https://play.google.com".toUri())
+            val intent = Intent(Intent.ACTION_VIEW, "https://play.google.com".toUri())
             context.startActivity(intent)
         }) {
             Text(text = "Disable ResumeAds On Click Event")
@@ -130,7 +136,7 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit){
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
-            EonAd.getInstance().loadInterstitialAd(context,BuildConfig.ad_interstitial_id)
+            EonAd.getInstance().loadInterstitialAd(context, BuildConfig.ad_interstitial_id)
             navigator.navigate(Screen.Products.route)
         }) {
             Text(text = "Go Product Screen")
