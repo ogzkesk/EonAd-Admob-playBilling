@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -76,7 +76,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.ogzkesk'
                 artifactId = 'eonad'
-                version = '1.0.1'
+                version = '1.0.2'
             }
         }
     }
