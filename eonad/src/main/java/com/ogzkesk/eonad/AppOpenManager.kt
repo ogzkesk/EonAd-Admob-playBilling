@@ -34,8 +34,6 @@ internal class AppOpenManager(
     var isDisabledOnClickEvent = false
 
     private fun loadAd() {
-        Log.d(TAG, "loadAd() isDisabledOnClickEvent :: $isDisabledOnClickEvent")
-        Log.d(TAG, "loadAd() isDisabled :: $isDisabled")
 
         if (isAdAvailable()) {
             return
@@ -64,8 +62,7 @@ internal class AppOpenManager(
     }
 
     private fun show() {
-        Log.d(TAG, "show() isDisabledOnClickEvent :: $isDisabledOnClickEvent")
-        Log.d(TAG, "show() isDisabled :: $isDisabled")
+
         if (!isShowingAd && !isDisabled && !isDisabledOnClickEvent && isAdAvailable()) {
 
             val fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -117,7 +114,6 @@ internal class AppOpenManager(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private fun onStart(){
-        println("$TAG, onSTART GIRDI")
         show()
     }
 

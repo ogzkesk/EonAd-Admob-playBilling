@@ -11,6 +11,13 @@
         android:orientation="vertical">
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/text_inapp"/>
+
+
         <FrameLayout
             android:id="@+id/native_small_container"
             android:layout_width="match_parent"
@@ -80,6 +87,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Show Banner Ads" />
+
+        <Button
+            android:id="@+id/btn_subscribe"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Subscribe random" />
+
+
+        <Button
+            android:id="@+id/btn_purchase"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Purchase random" />
 
         <FrameLayout
             android:layout_width="match_parent"

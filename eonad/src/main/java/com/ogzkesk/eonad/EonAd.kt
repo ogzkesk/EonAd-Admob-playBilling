@@ -11,9 +11,6 @@ private const val TAG = "EonAd"
 class EonAd private constructor() {
 
     private lateinit var application: Application
-    private lateinit var provider: String
-    private var deviceTestIds: List<String> = emptyList()
-
     private val nativeAd = EonNativeAd()
     private val interstitialAd = EonInterstitialAd()
     private val rewardedAd = EonRewardedAd()

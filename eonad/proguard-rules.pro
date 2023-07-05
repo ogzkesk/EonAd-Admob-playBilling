@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.ogzkesk.eonad.billing.util.PurchaseItem { *; }
+-keep class com.ogzkesk.eonad.billing.util.Constants { *; }
+-keep class com.ogzkesk.eonad.billing.ProductDetail { *; }
+-keepclassmembers class com.ogzkesk.eonad.billing.MIap {
+    static java.lang.String *;
+}

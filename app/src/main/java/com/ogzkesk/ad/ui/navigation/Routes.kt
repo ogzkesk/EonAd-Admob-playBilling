@@ -14,8 +14,6 @@ import androidx.navigation.navArgument
 
 sealed class Screen(val route: String) {
 
-    object Splash : Screen("splash")
-
     object Home : Screen("home")
 
     object Banner : Screen("banner")

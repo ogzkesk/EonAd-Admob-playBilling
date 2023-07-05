@@ -17,3 +17,4 @@ val navigator: Navigator
 fun ProvideNavHost(navHostController: NavHostController, content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalNavigator provides NavHostNavigator(navHostController), content = content)
 }
+

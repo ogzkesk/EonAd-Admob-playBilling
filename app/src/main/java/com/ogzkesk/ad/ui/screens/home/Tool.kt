@@ -129,7 +129,10 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit){
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = { navigator.navigate(Screen.Products.route) }) {
+        Button(onClick = {
+            EonAd.getInstance().loadInterstitialAd(context,BuildConfig.ad_interstitial_id)
+            navigator.navigate(Screen.Products.route)
+        }) {
             Text(text = "Go Product Screen")
         }
 

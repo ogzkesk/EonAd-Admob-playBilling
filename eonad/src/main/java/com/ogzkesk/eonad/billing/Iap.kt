@@ -4,262 +4,225 @@ import android.app.Activity
 import android.app.Application
 import android.util.Log
 import com.android.billingclient.api.*
-import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams
-import com.android.billingclient.api.QueryProductDetailsParams.Product
-import com.google.common.collect.ImmutableList
+import com.ogzkesk.eonad.billing.listener.ConnectionListener
+import com.ogzkesk.eonad.billing.listener.PurchaseHistoryListener
+import com.ogzkesk.eonad.billing.util.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 
 private const val TAG = "Iap"
+
 
 class Iap {
 
     private lateinit var application: Application
     private lateinit var billingClient: BillingClient
     private lateinit var products: List<PurchaseItem>
+    private lateinit var connectionListener: BillingClientStateListener
+    private lateinit var mIap: MIap
+    private val result = Channel<PurchaseResult>()
     private var subscriptions: List<ProductDetail> = emptyList()
     private var inAppProducts: List<ProductDetail> = emptyList()
     private var subscriptionsBase: List<ProductDetails> = emptyList()
     private var inAppProductsBase: List<ProductDetails> = emptyList()
-    private lateinit var listener: PurchasesUpdatedListener
+    private var autoConsumeEnabled = true
+    private var isConnected = false
 
-    // todo purchase listener olarak değiştirilebilir.
-    // todo ayrıca gelmiyor amk . loglar gelmiyor.
-    // todo onResult'tada purchase item dönmesi lazım errorun dısında.
-    fun listener(onResult: (error: String?) -> Unit) {
-        listener = PurchasesUpdatedListener { result, purchases ->
-            if (result.checkResponse()) {
-                onResult.invoke(null)
-                verifyPurchase()
-            } else {
-                onResult.invoke(result.debugMessage)
-            }
+
+    private val purchaseListener = PurchasesUpdatedListener { billingResult, purchases ->
+        if (billingResult.checkResponse()) {
+
+            setSubscription(purchases, billingResult)
+            setPurchase(purchases, billingResult)
+
+        } else {
+            Log.d(TAG, "listen() ${billingResult.debugMessage}")
+            this@Iap.result.trySend(
+                PurchaseResult(billingResult.toIapResult(), emptyList())
+            )
         }
     }
 
-    fun init(application: Application, products: List<PurchaseItem>) {
+
+    fun init(application: Application, products: List<PurchaseItem>) = apply {
         this.application = application
         this.products = products
-        initBillingClient()
+    }
+
+    fun isConnected(): Boolean {
+        return isConnected
     }
 
     fun getSubscriptions(): List<ProductDetail> {
         return subscriptions
     }
 
+
     fun getInAppProducts(): List<ProductDetail> {
         return inAppProducts
     }
 
-    private fun initBillingClient() {
+    suspend fun listen(purchaseResult: (PurchaseResult) -> Unit) {
+        result.receiveAsFlow().collect(purchaseResult::invoke)
+    }
+
+    fun disableAutoConsume() {
+        autoConsumeEnabled = false
+    }
+
+    fun consume(purchase: PurchaseIap, onConsume: (error: String?) -> Unit) {
+        mIap.consume(purchase){ error -> onConsume.invoke(error) }
+    }
+
+
+    fun connect(listener: ConnectionListener? = null) = apply {
+
         billingClient = BillingClient.newBuilder(application.applicationContext)
+            .setListener(purchaseListener)
             .enablePendingPurchases()
-            .setListener(listener)
             .build()
 
-        startConnection()
+        connectionListener(listener)
+        billingClient.startConnection(connectionListener)
+        setMIap()
     }
 
 
-
-    fun startConnection() {
-
-        if(billingClient.checkConnection().not()) {
-            initBillingClient()
-            return
-        }
-
-        billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingServiceDisconnected() {
-                Log.d(TAG, "onServiceDisconnected")
-//                startConnection()
-            }
-
-            override fun onBillingSetupFinished(p0: BillingResult) {
-                Log.d(TAG, "onBillingSetupFinished()")
-                getSubs()
-                getProducts()
-            }
-        })
+    fun release() {
+        Log.d(TAG, "released()")
+        billingClient.endConnection()
     }
 
-    private fun getSubs() {
-        val productList = products.filter {
-            it.type == PurchaseItem.TYPE_SUBSCRIPTION
-        }.map {
-            Product.newBuilder()
-                .setProductId(it.id)
-                .setProductType(BillingClient.ProductType.SUBS)
-                .build()
-        }
 
-        Log.d(TAG,"querying subs :: $productList")
-        if(productList.isEmpty()) return
+    fun subscribe(activity: Activity, productId: String) = apply {
 
-        val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(productList)
-            .build()
-
-        billingClient.queryProductDetailsAsync(params) { result, prodDetailsList ->
-            if (result.checkResponse()) {
-                this.subscriptionsBase = prodDetailsList
-                this.subscriptions = prodDetailsList.mapToProductDetail()
-            } else {
-                Log.d(TAG, "getSubs() ${result.debugMessage}")
-            }
-        }
-    }
-
-    private fun getProducts() {
-        val productList = products.filter {
-            it.type == PurchaseItem.TYPE_PRODUCT
-        }.map {
-            Product.newBuilder()
-                .setProductId(it.id)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build()
-        }
-
-        Log.d(TAG,"querying inapp products :: $productList")
-        if(productList.isEmpty()) return
-
-        val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(productList)
-            .build()
-
-        billingClient.queryProductDetailsAsync(params) { result, prodDetailsList ->
-            if (result.checkResponse()) {
-                this.inAppProductsBase = prodDetailsList
-                this.inAppProducts = prodDetailsList.mapToProductDetail()
-            } else {
-                Log.d(TAG, "getProducts() ${result.debugMessage}")
-            }
-        }
-    }
-
-    fun launchPurchaseFlow(productId: String, activity: Activity) = apply {
-
-        val productDetails = getProductDetailById(productId) ?: return@apply
-
-        Log.d(TAG,"launchPurchase,, product is not null billingFlow starting..")
-
-        val productDetailsParamsList = getProductDetailParams(productDetails)
+        val productDetails = mIap.getSubscriptionDetailsById(productId) ?: return@apply
+        val productDetailsParamsList = mIap.getProductDetailParams(productDetails)
 
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(productDetailsParamsList)
             .build()
 
-        billingClient.launchBillingFlow(
-            activity,
-            billingFlowParams
-        )
+        Log.d(TAG, "launchingBillingFlow()")
+        billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
-    private fun verifyPurchase() {
-        billingClient.queryPurchasesAsync(
-            QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build()
-        ) { billingResult: BillingResult, list: List<Purchase> ->
-            if (billingResult.checkResponse()) {
-                for (purchase in list) {
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
-                        verifySubPurchase(purchase)
-                    }
-                }
-            }
-        }
-    }
+    fun purchase(activity: Activity, productId: String) = apply {
 
-    private fun verifySubPurchase(purchases: Purchase) {
-        val acknowledgePurchaseParams = AcknowledgePurchaseParams
-            .newBuilder()
-            .setPurchaseToken(purchases.purchaseToken)
+        val productDetails = mIap.getProductDetailById(productId) ?: return@apply
+        val productDetailsParamsList = mIap.getProductDetailParams(productDetails)
+
+        val billingFlowParams = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(productDetailsParamsList)
             .build()
 
-        billingClient.acknowledgePurchase(acknowledgePurchaseParams) { result ->
-            if (result.checkResponse()) {
-                // success subscribed.
-                return@acknowledgePurchase
-            }
-        }
-        Log.d(TAG, "Purchase Token: " + purchases.purchaseToken)
-        Log.d(TAG, "Purchase Time: " + purchases.purchaseTime)
-        Log.d(TAG, "Purchase OrderID: " + purchases.orderId)
+        Log.d(TAG, "launchingBillingFlow()")
+        billingClient.launchBillingFlow(activity, billingFlowParams)
+
     }
 
 
-    fun release() {
-        // TODO End connection actually work but not sending logs in onDisconnected.. why?
-        billingClient.endConnection()
-    }
+    fun checkSubscription(available: (isAvailable: Boolean) -> Unit) {
 
-    fun checkSubscription() {
+        if (isConnected.not()) Log.d(TAG, "Iap not connected")
+
         val params = QueryPurchasesParams.newBuilder()
             .setProductType(BillingClient.ProductType.SUBS)
             .build()
+
         billingClient.queryPurchasesAsync(params) { result, purchases ->
             if (result.checkResponse()) {
-                println("paymentHelper --> checkSubscription > queryPurchase response : OK -> running")
-                if (purchases.isNotEmpty()) {
-                    for ((i, purchase) in purchases.withIndex()) {
-                        //Here you can manage each product, if you have multiple subscription
-                        Log.d("testOffer", purchase.originalJson)
-                        Log.d("testOffer", " index$i")
-                    }
-                } else {
+                if(purchases.isNotEmpty()) available.invoke(true)
+                return@queryPurchasesAsync
+            }
+            available.invoke(false)
+        }
+    }
 
+
+    fun checkPurchaseHistory(listener: PurchaseHistoryListener) {
+
+        val params = QueryPurchaseHistoryParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+            .setProductType(BillingClient.ProductType.SUBS)
+            .build()
+
+        billingClient.queryPurchaseHistoryAsync(params) { result, history ->
+            if (result.checkResponse()) {
+                listener.onCheckPurchaseHistory(
+                    result.toIapResult(),
+                    history.toNonNull().toPurchaseHistory()
+                )
+                return@queryPurchaseHistoryAsync
+            }
+            listener.onCheckPurchaseHistory(result.toIapResult(), emptyList())
+        }
+    }
+
+
+    private fun connectionListener(listener: ConnectionListener?) {
+        connectionListener = object : BillingClientStateListener {
+            override fun onBillingServiceDisconnected() {
+                Log.d(TAG, "onDisconnected")
+                listener?.onConnectionState(false, true)
+            }
+
+            override fun onBillingSetupFinished(result: BillingResult) {
+                Log.d(TAG, "onConnected")
+                isConnected = true
+                listener?.onConnectionState(true, false)
+                if (result.checkResponse()) {
+                    mIap.getSubs { prodDetailsList ->
+                        this@Iap.subscriptionsBase = prodDetailsList
+                        this@Iap.subscriptions = prodDetailsList.mapToProductDetail()
+                        setMIap()
+                    }
+                    mIap.getProducts { prodDetailsList ->
+                        this@Iap.inAppProductsBase = prodDetailsList
+                        this@Iap.inAppProducts = prodDetailsList.mapToProductDetail()
+                        setMIap()
+                    }
                 }
             }
         }
     }
 
-    private fun getProductDetailParams(details: ProductDetails) : List<ProductDetailsParams> {
-        return if(details.productType == BillingClient.ProductType.SUBS){
-            if(details.subscriptionOfferDetails != null){
-                ImmutableList.of(
-                    BillingFlowParams.ProductDetailsParams.newBuilder()
-                        .setProductDetails(details)
-                        .setOfferToken(details.subscriptionOfferDetails!!.first().offerToken)
-                        .build()
-                )
-            } else {
-                emptyList()
+    private fun setMIap() {
+        this.mIap = MIap(
+            billingClient,
+            products,
+            subscriptionsBase,
+            inAppProductsBase
+        )
+    }
+
+
+    private fun setSubscription(purchases: List<Purchase>?, result: BillingResult) {
+        mIap.checkSubAndVerify(purchases, result) { error, purchase ->
+            if (error != null) {
+                this@Iap.result.trySend(PurchaseResult(result.toIapResult(), emptyList()))
+                return@checkSubAndVerify
             }
-        } else {
-            ImmutableList.of(
-                BillingFlowParams.ProductDetailsParams.newBuilder()
-                    .setProductDetails(details)
-                    .build()
+            this@Iap.result.trySend(
+                purchase
             )
         }
     }
 
-    private fun getProductDetailById(productId: String) : ProductDetails? {
-
-        val productList = mutableListOf<ProductDetails>()
-        productList.addAll(subscriptionsBase)
-        productList.addAll(inAppProductsBase)
-
-        return if (productList.isNotEmpty()) {
-            productList.filter { it.productId == productId }.first()
-        } else {
-            null
-        }
-    }
-
-    fun restoreSubscription() {
-        val params = QueryPurchasesParams.newBuilder()
-            .setProductType(BillingClient.ProductType.SUBS)
-            .build()
-        billingClient.queryPurchasesAsync(params) { result, purchases ->
-            if (result.checkResponse()) {
-                Log.d(TAG, purchases.size.toString() + " size")
-                if (purchases.isNotEmpty()) {
-                    for ((i, purchase) in purchases.withIndex()) {
-                        Log.d("testOffer", purchase.originalJson)
-                        Log.d("testOffer", " index$i")
-                    }
-                } else {
-                    Log.d(TAG, "No purchase found :: ${result.debugMessage}")
+    private fun setPurchase(purchases: List<Purchase>?, result: BillingResult) {
+        if (autoConsumeEnabled) {
+            mIap.checkPurchaseAndConsume(purchases, result) { error, purchase ->
+                if (error != null) {
+                    this@Iap.result.trySend(PurchaseResult(result.toIapResult(), emptyList()))
+                    return@checkPurchaseAndConsume
                 }
+
+                this@Iap.result.trySend(purchase)
             }
+        } else {
+            this@Iap.result.trySend(
+                PurchaseResult(result.toIapResult(), emptyList())
+            )
         }
     }
 
@@ -272,15 +235,5 @@ class Iap {
             instance ?: Iap().also { instance = it }
         }
     }
-
-    init {
-        listener { }
-    }
 }
 
-private class MListener : PurchasesUpdatedListener {
-
-    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
-
-    }
-}

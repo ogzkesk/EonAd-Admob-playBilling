@@ -12,7 +12,6 @@ import com.ogzkesk.ad.ui.navigation.setup.ProvideNavHost
 import com.ogzkesk.ad.ui.screens.banner.banner
 import com.ogzkesk.ad.ui.screens.home.native
 import com.ogzkesk.ad.ui.screens.products.products
-import com.ogzkesk.ad.ui.screens.splash.splash
 
 
 @Composable
@@ -25,7 +24,6 @@ fun Root() {
             navController = navController,
             startDestination = Screen.Home.route
         ){
-            splash()
             native()
             banner()
             products()
@@ -34,6 +32,3 @@ fun Root() {
 }
 
 
-fun LazyListScope.space(height: Int) {
-    item { Spacer(modifier = Modifier.height(height = height.dp)) }
-}

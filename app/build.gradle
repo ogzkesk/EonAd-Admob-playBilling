@@ -13,8 +13,8 @@ android {
         applicationId "com.ogzkesk.ad"
         minSdk 26
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 10
+        versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -43,11 +43,11 @@ android {
         }
         appReal{
             dimension = "1.0.0"
-            buildConfigField "String", "ad_interstitial_id", "\"ca-app-pub-9877606597346049/2684449338\""
-            buildConfigField "String", "ad_resume_id", "\"ca-app-pub-9877606597346049/1465956184\""
-            buildConfigField "String", "ad_rewarded_id", "\"ca-app-pub-9877606597346049/9203193017\""
-            buildConfigField "String", "ad_native_id", "\"ca-app-pub-9877606597346049/8070429964\""
-            buildConfigField "String", "ad_banner_id", "\"ca-app-pub-9877606597346049/5850534691\""
+            buildConfigField "String", "ad_interstitial_id", "\"ca-app-pub-3940256099942544/1033173712\""
+            buildConfigField "String", "ad_resume_id", "\"ca-app-pub-3940256099942544/3419835294\""
+            buildConfigField "String", "ad_rewarded_id", "\"ca-app-pub-3940256099942544/5224354917\""
+            buildConfigField "String", "ad_native_id", "\"ca-app-pub-3940256099942544/2247696110\""
+            buildConfigField "String", "ad_banner_id", "\"ca-app-pub-3940256099942544/6300978111\""
         }
     }
 
@@ -106,6 +106,8 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:2.46.1"
     kapt "com.google.dagger:hilt-compiler:2.46.1"
+
+    implementation "com.orhanobut:hawk:2.0.1"
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
