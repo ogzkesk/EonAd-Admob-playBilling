@@ -139,5 +139,6 @@ internal fun mapBannerAdSize(adSize : BannerAdSize) : AdSize {
 enum class NativeAdTemplate {
     SMALL,
     MEDIUM,
+    MEDIUM_2,
     LARGE
 }

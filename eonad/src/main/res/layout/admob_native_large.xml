@@ -87,16 +87,20 @@
             android:textStyle="normal"
             tools:text="Ad description..." />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ad_image"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:strokeColor="@null"
-            android:layout_marginHorizontal="8dp"
-            app:shapeAppearance="@style/ShapeForLarge"
-            android:adjustViewBounds="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            tools:src="@tools:sample/avatars" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ad_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:adjustViewBounds="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                tools:src="@tools:sample/avatars" />
+
+        </FrameLayout>
+
 
 
         <Button

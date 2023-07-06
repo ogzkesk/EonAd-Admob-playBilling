@@ -32,9 +32,7 @@ fun EonNativeAdView(
             modifier = modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .border(0.6.dp, Color(0xFF9C9C9C), RoundedCornerShape(8.dp))
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .windowInsetsPadding(WindowInsets.statusBars),
+                .border(0.6.dp, Color(0xFF9C9C9C), RoundedCornerShape(8.dp)),
             factory = { nativeAdView },
             update = {
                 try {
@@ -50,9 +48,7 @@ fun EonNativeAdView(
             modifier = modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .border(0.6.dp, Color(0xFF9C9C9C), RoundedCornerShape(8.dp))
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .windowInsetsPadding(WindowInsets.statusBars),
+                .border(0.6.dp, Color(0xFF9C9C9C), RoundedCornerShape(8.dp)),
             factory = { nativeAdView }
         )
     }

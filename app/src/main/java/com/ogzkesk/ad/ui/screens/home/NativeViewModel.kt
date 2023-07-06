@@ -44,6 +44,19 @@ class NativeViewModel @Inject constructor() : ViewModel() {
         )
     }
 
+    fun loadNativeMedium2Template(context: Context) {
+        EonAd.getInstance().loadNativeAdTemplate(
+            context = context,
+            adUnitId = BuildConfig.ad_native_id,
+            type = NativeAdTemplate.MEDIUM_2,
+            onFailedToLoad = {},
+            onNativeAdLoaded = { view ->
+                println("EonNativeAd -- ViewModel Medium Loaded :: $view")
+                _uiState.value = _uiState.value.copy(medium2NativeView = view)
+            },
+        )
+    }
+
     fun loadNativeLargeTemplate(context: Context) {
         EonAd.getInstance().loadNativeAdTemplate(
             context = context,
@@ -83,6 +96,7 @@ class NativeViewModel @Inject constructor() : ViewModel() {
     data class UiState(
         val smallNativeView: View? = null,
         val mediumNativeView: View? = null,
+        val medium2NativeView: View? = null,
         val largeNativeView: View? = null,
         val error: EonAdError? = null
     )

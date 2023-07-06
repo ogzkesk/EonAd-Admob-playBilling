@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.ads.nativead.NativeAd
@@ -72,12 +73,14 @@ internal class NativeAdUi(private val nativeAd: NativeAd?) {
                 val advertiser = adView.findViewById<TextView>(R.id.ad_advertiser)
                 val icon = adView.findViewById<ImageView>(R.id.ad_icon)
                 val callToAction = adView.findViewById<Button>(R.id.ad_call_to_action)
+                val body = adView.findViewById<TextView>(R.id.ad_body)
                 val adImage = adView.findViewById<FrameLayout>(R.id.ad_view_container)
                     .findViewById<ImageView>(R.id.ad_image)
 
                 headLine.text = nativeAd.headline
                 advertiser.text = nativeAd.advertiser
                 callToAction.text = nativeAd.callToAction
+                body.text = nativeAd.body
                 nativeAd.icon?.drawable?.let { draw -> icon.setImageDrawable(draw) }
                 if (nativeAd.images.isNotEmpty()) {
                     nativeAd.images[0].drawable?.let { adImage.setImageDrawable(it) }
@@ -85,9 +88,51 @@ internal class NativeAdUi(private val nativeAd: NativeAd?) {
 
                 headlineView = headLine
                 advertiserView = advertiser
+                bodyView = body
                 iconView = icon
                 callToActionView = callToAction
                 imageView = adImage
+
+                removeAllViews()
+                setNativeAd(nativeAd)
+                addView(adView)
+            }
+        } else {
+            loadingView
+        }
+    }
+
+    private fun populateMedium2NativeView(context: Context): View {
+
+        val loadingView = (context as Activity).layoutInflater.inflate(
+            R.layout.admob_native_medium_two,
+            null
+        ) as FrameLayout
+
+        return if(nativeAd != null) {
+            NativeAdView(context).apply {
+                val adView = (context).layoutInflater.inflate(
+                    R.layout.admob_native_medium_two,
+                    null
+                ) as FrameLayout
+
+                val headLine = adView.findViewById<TextView>(R.id.ad_headline)
+                val advertiser = adView.findViewById<TextView>(R.id.ad_advertiser)
+                val body = adView.findViewById<TextView>(R.id.ad_body)
+                val icon = adView.findViewById<ImageView>(R.id.ad_icon)
+                val callToAction = adView.findViewById<Button>(R.id.ad_call_to_action)
+
+                headLine.text = nativeAd.headline
+                advertiser.text = nativeAd.advertiser
+                callToAction.text = nativeAd.callToAction
+                body.text = nativeAd.body
+                nativeAd.icon?.drawable?.let { draw -> icon.setImageDrawable(draw) }
+
+                headlineView = headLine
+                advertiserView = advertiser
+                bodyView = body
+                iconView = icon
+                callToActionView = callToAction
 
                 removeAllViews()
                 setNativeAd(nativeAd)
@@ -148,6 +193,7 @@ internal class NativeAdUi(private val nativeAd: NativeAd?) {
         return when (type) {
             NativeAdTemplate.SMALL -> populateSmallNativeView(context).apply { show(this) }
             NativeAdTemplate.MEDIUM -> populateMediumNativeView(context).apply { show(this) }
+            NativeAdTemplate.MEDIUM_2 -> populateMedium2NativeView(context).apply { show(this) }
             NativeAdTemplate.LARGE -> populateLargeNativeView(context).apply { show(this) }
         }
     }
@@ -155,7 +201,7 @@ internal class NativeAdUi(private val nativeAd: NativeAd?) {
     private fun show(view: View) {
         val shimmer = view.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
         val adView = view.findViewById<FrameLayout>(R.id.ad_view_container)
-        shimmer.isVisible = nativeAd == null
-        adView.isVisible = nativeAd != null
+        shimmer.isGone = nativeAd != null
+        adView.isGone = nativeAd == null
     }
 }

@@ -49,6 +49,7 @@ fun Native() {
                         onLoadNativeTemplatesClick = {
                             viewModel.loadNativeSmallTemplate(context)
                             viewModel.loadNativeMediumTemplate(context)
+                            viewModel.loadNativeMedium2Template(context)
                             viewModel.loadNativeLargeTemplate(context)
                         }
                     )
@@ -64,6 +65,13 @@ fun Native() {
                 item {
                     EonNativeAdView(
                         nativeAdView = uiState.mediumNativeView,
+                        darkModeSupport = true
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                item {
+                    EonNativeAdView(
+                        nativeAdView = uiState.medium2NativeView,
                         darkModeSupport = true
                     )
                 }

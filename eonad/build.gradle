@@ -76,7 +76,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.ogzkesk'
                 artifactId = 'eonad'
-                version = '1.0.3'
+                version = '1.0.4'
             }
         }
     }
