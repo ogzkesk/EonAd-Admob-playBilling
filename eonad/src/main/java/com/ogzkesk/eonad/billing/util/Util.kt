@@ -22,11 +22,16 @@ data class PurchaseItem(
 }
 
 internal fun ProductDetails.mapToProductDetail() : ProductDetail {
-    val price = this.subscriptionOfferDetails?.map { details ->
+    val formattedPrice = this.subscriptionOfferDetails?.map { details ->
         details.pricingPhases.pricingPhaseList.map {
             it.formattedPrice
         }.first()
     }?.first() ?: this.oneTimePurchaseOfferDetails?.formattedPrice ?: EMPTY_PRICE
+    val price = this.subscriptionOfferDetails?.map { details ->
+        details.pricingPhases.pricingPhaseList.map {
+            it.priceAmountMicros
+        }.first()
+    }?.first() ?: this.oneTimePurchaseOfferDetails?.priceAmountMicros ?: 0
 
 
     val productId = this.productId
@@ -38,7 +43,7 @@ internal fun ProductDetails.mapToProductDetail() : ProductDetail {
         ProductDetail.TYPE_SUBSCRIPTION
     }
 
-    return ProductDetail(productId,name,description,price,type)
+    return ProductDetail(productId,name,description,formattedPrice,price,type)
 
 }
 

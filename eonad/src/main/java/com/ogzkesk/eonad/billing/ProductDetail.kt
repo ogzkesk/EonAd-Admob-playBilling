@@ -5,6 +5,7 @@ data class ProductDetail(
     val name: String,
     val description: String,
     val formattedPrice: String,
+    val price: Long,
     val type: String
 ) {
     companion object {

@@ -62,7 +62,7 @@ class Iap {
         return inAppProducts
     }
 
-    suspend fun listen(purchaseResult: (PurchaseResult) -> Unit) {
+    suspend fun listen(purchaseResult: suspend (PurchaseResult) -> Unit) {
         result.receiveAsFlow().collect(purchaseResult::invoke)
     }
 
