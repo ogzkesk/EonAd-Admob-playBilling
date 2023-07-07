@@ -312,7 +312,7 @@ class App : Application(){
         iap.subscribe(activity,"subscription_id")
             .listen { result ->
                 if(result.purchases.isNotEmpty()){
-                    // handle users subscribe
+                    // user subscribed successfully
                 }                
             }
         
@@ -325,10 +325,10 @@ class App : Application(){
 
 ```kotlin
     someCoroutineScope.launch() {
-        iap.subscribe(activity,"subscription_id")
+        iap.purchase(activity,"product_id")
             .listen { result ->
                 if(result.purchases.isNotEmpty()){
-                    // handle users subscribe
+                    // user bought the product successfully
                 }                
             }
         
