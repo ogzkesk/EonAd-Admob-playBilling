@@ -164,9 +164,8 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
 * Also you can just use ready templates and add your own view easily .
 * Note : All Templates Using Shimmer Loading Effect so you dont need to care about loading state.
 
-
-![native-light-mode](https://github.com/ogzkesk/EonAd/assets/100413782/8a51ce75-5ef6-4dad-a446-95e9dc28b690)
-![native-dark-mode](https://github.com/ogzkesk/EonAd/assets/100413782/e17a3444-2b67-4464-be3b-ea1da68fbbe4)
+<img src="https://github.com/ogzkesk/EonAd/assets/100413782/8a51ce75-5ef6-4dad-a446-95e9dc28b690" width="270">
+<img src="https://github.com/ogzkesk/EonAd/assets/100413782/e17a3444-2b67-4464-be3b-ea1da68fbbe4" width="270">
 
 
 ##### Usage For Xml
