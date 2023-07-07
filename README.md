@@ -340,7 +340,7 @@ class App : Application(){
 #### Consume
 
 
-* If you used disableAutoConsume() you need to consume() item later on otherwise user can't buy thar inapp product again.
+* If you used disableAutoConsume() you need to consume() item later on otherwise user can't buy that inapp product again.
 
 ```kotlin
     Iap.getInstance().disableAutoConsume()
