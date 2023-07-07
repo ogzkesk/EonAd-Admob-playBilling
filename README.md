@@ -347,8 +347,7 @@ class App : Application(){
 ```
 
 
-* To make available user can buy that item again :
-* Note : PurchaseIap you gonna get from listen() function when user buy any inapp product 
+* In order for the user to purchase the product again :
 
 ```kotlin
     Iap.getInstance().consume(PurchaseIap){ error -> 
@@ -357,6 +356,8 @@ class App : Application(){
         }
     }
 ```
+
+Note : PurchaseIap you gonna get from listen() function when user buy any inapp product 
 
 
 
