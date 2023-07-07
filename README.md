@@ -117,9 +117,8 @@ class App : Application(){
     EonAd.getInstance().loadInterstitialAdWithInterval(context,"ad_unit_id",30_000)
 ```
 
-![inter-light-mode](https://github.com/ogzkesk/EonAd/assets/100413782/5892f3be-2c7d-4bce-b2a0-0b58192c2a0d)
-![inter-dark-mode](https://github.com/ogzkesk/EonAd/assets/100413782/76bff833-42fc-4b9e-8912-e9806606b165)
-
+<img src="https://github.com/ogzkesk/EonAd/assets/100413782/5892f3be-2c7d-4bce-b2a0-0b58192c2a0d" width="270">
+<img src="https://github.com/ogzkesk/EonAd/assets/100413782/76bff833-42fc-4b9e-8912-e9806606b165" width="270">
 
 
 ### Rewarded Ads
