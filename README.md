@@ -107,6 +107,8 @@ class App : Application(){
     })
 ```
 
+
+
 * Use loadInterstitialAdWithInterval() to disable Interstitial Ads for a given time
 * This disables reloading of ads for a certain period of time.
 * E.g. in this code Interstitial Ad won't show before 30 second done :
@@ -114,6 +116,9 @@ class App : Application(){
 ```kotlin
     EonAd.getInstance().loadInterstitialAdWithInterval(context,"ad_unit_id",30_000)
 ```
+
+![]([image1.png](https://github.com/ogzkesk/EonAd/assets/100413782/a5c539a3-b4ef-4b83-a884-93c99493aa9d) "Light Mode") 
+![]([image2.png](https://github.com/ogzkesk/EonAd/assets/100413782/a764196b-8882-45f0-bbe8-d4037c0dd7e0) "Dark Mode")
 
 
 
