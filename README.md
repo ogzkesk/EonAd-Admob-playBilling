@@ -117,8 +117,8 @@ class App : Application(){
     EonAd.getInstance().loadInterstitialAdWithInterval(context,"ad_unit_id",30_000)
 ```
 
-<img src="[https://github.com/ogzkesk/EonAd/assets/100413782/a5c539a3-b4ef-4b83-a884-93c99493aa9d]" width="270" align="left">
-<img src="[https://github.com/ogzkesk/EonAd/assets/100413782/a5c539a3-b4ef-4b83-a884-93c99493aa9d]" width="270" align="right">
+![inter-light-mode](https://github.com/ogzkesk/EonAd/assets/100413782/5892f3be-2c7d-4bce-b2a0-0b58192c2a0d)
+![inter-dark-mode](https://github.com/ogzkesk/EonAd/assets/100413782/76bff833-42fc-4b9e-8912-e9806606b165)
 
 
 
@@ -165,6 +165,9 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
 * Also you can just use ready templates and add your own view easily .
 * Note : All Templates Using Shimmer Loading Effect so you dont need to care about loading state.
 
+
+![native-light-mode](https://github.com/ogzkesk/EonAd/assets/100413782/8a51ce75-5ef6-4dad-a446-95e9dc28b690)
+![native-dark-mode](https://github.com/ogzkesk/EonAd/assets/100413782/e17a3444-2b67-4464-be3b-ea1da68fbbe4)
 
 
 ##### Usage For Xml
