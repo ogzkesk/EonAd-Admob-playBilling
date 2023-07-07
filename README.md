@@ -4,6 +4,8 @@
 
 A library simplifies and makes more effectiveness Google Admob Ads & Google Play Billing
 
+
+
 ## Gradle Setup
 
 * Step 1. Add the JitPack repository to your settings.gradle
@@ -25,6 +27,9 @@ dependencies {
 }
 ```
 
+
+
+
 ## ADMOB
 
 * Describe your Admob App-ID in manifest.xml
@@ -34,6 +39,8 @@ dependencies {
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="{your_app_id}" />
 ```
+
+
   
 ### Setup
 
@@ -48,6 +55,8 @@ class App : Application(){
     }
 }
 ```
+
+
 
 ### Resume Ads
 
@@ -79,6 +88,8 @@ class App : Application(){
     EonAd.getInstance().disableResumeAdsOnClickEvent()
 ```
 
+
+
 ### Interstitial Ads
 
 ```kotlin
@@ -104,6 +115,8 @@ class App : Application(){
     EonAd.getInstance().loadInterstitialAdWithInterval(context,"ad_unit_id",30_000)
 ```
 
+
+
 ### Rewarded Ads
 
 * Same usage as Interstitial Ads
@@ -127,6 +140,8 @@ class App : Application(){
     })
 ```
 
+
+
 ### Native Ads
 
 
@@ -138,10 +153,14 @@ class App : Application(){
 
 Note : Use AdCallback for to get other states of ad. ( loading etc. )
 
+
+
 #### Native Ad Templates
 
 * Also you can just use ready templates and add your own view easily .
 * Note : All Templates Using Shimmer Loading Effect so you dont need to care about loading state.
+
+
 
 ##### Usage For Xml
 
@@ -161,7 +180,10 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
     )
 ```
 
+
+
 ##### Usage For Jetpack Compose
+
 
 * Give nativeAdView that you get from loadNativeAdTemplate() function.
 * Note : Do not run loadNativeAdTemplate() in @Composable functions to avoid multiple loads.
@@ -173,12 +195,17 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
     )
 ```
 
+
+
 ### Banner Ads
+
 
 * Similar native ad templates just load banner ads and populate view to your xml layout.
 * You have to use Callback if you need ad's other states.
 
+
 ##### Usage For Xml
+
 
 ```kotlin
     val bannerAdView = EonAd.getInstance().loadBannerAd(context,"ad_unit_id",BannerAdSize.BANNER) // select different banner types that admob provides
@@ -186,7 +213,9 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
     binding.myView.addView(bannerAdView)
 ```
 
+
 ##### Usage For Jetpack Compose
+
 
 * Note : Do not run loadBannerAd() in @Composable functions to avoid multiple loads.
   
@@ -194,9 +223,13 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
     EonBannerView(view = bannerView)
 ```
 
+
+
 ## Play Billing
 
+
 ### Setup
+
 
 * Describe permissions in your Manifest.xml
 
@@ -204,6 +237,7 @@ Note : Use AdCallback for to get other states of ad. ( loading etc. )
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 ```
+
 
 * Initialize in Application.kt
 
@@ -220,6 +254,7 @@ class App : Application(){
     }
 }
 ```
+
 
 * NOTE : Billing will connect in 1-2 second. If you want to do something on at app starting you need to be sure CONNECTED .
 * You can use with listener if you need to :
@@ -251,7 +286,10 @@ class App : Application(){
     }
 ```
 
+
+
 #### Products & Subscriptions
+
 
 * For fetching products & subscription that you described :
 
@@ -261,7 +299,10 @@ class App : Application(){
     val products = iap.getInAppProducts()
 ```
 
+
+
 #### Subscribe & Purchase
+
 
 * listen() suspend function that needs coroutine scope 
 * Use subscribe() for start subscription billing :
@@ -278,6 +319,7 @@ class App : Application(){
     }
 ```
 
+
 * listen() suspend function that needs coroutine scope
 * Use purchase() for start inapp product billing :
 
@@ -293,13 +335,17 @@ class App : Application(){
     }
 ```
 
+
+
 #### Consume
+
 
 * If you used disableAutoConsume() you need to consume() item later on otherwise user can't buy thar inapp product again.
 
 ```kotlin
     Iap.getInstance().disableAutoConsume()
 ```
+
 
 * To make available user can buy that item again :
 * Note : PurchaseIap you gonna get from listen() function when user buy any inapp product 
@@ -312,13 +358,17 @@ class App : Application(){
     }
 ```
 
+
+
 #### State
+
 
 * Check connected state ( this is not a listener )
 
 ```kotlin
     Iap.getInstance().isConnected()
 ```
+
 
 * If you won't use billing after a while use :
 * Note : If released billing won't work until you .connect() again.
