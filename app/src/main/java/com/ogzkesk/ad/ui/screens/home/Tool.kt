@@ -31,10 +31,8 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit) {
     var resumeAdsEnabled by remember { mutableStateOf(true) }
     LaunchedEffect(resumeAdsEnabled) {
         if (resumeAdsEnabled) {
-            println("resumeAds Enabled girdi")
             EonAd.getInstance().enableResumeAds()
         } else {
-            println("resumeAds Disabled girdi")
             EonAd.getInstance().disableResumeAds()
         }
     }
@@ -62,7 +60,19 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit) {
                         println("onAdClosed")
                         resumeAdsEnabled = true
                     }
+
                 })
+        }) {
+            Text(text = "Show Interstitial Interval")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            EonAd.getInstance().loadInterstitialAd(
+                context,
+                BuildConfig.ad_interstitial_id
+            )
         }) {
             Text(text = "Show Interstitial")
         }
@@ -86,6 +96,17 @@ fun Tool(onLoadNativeTemplatesClick: () -> Unit) {
                 })
         }) {
             Text(text = "Show Rewarded")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            EonAd.getInstance().loadRewardedAd(
+                context,
+                BuildConfig.ad_rewarded_id
+            )
+        }) {
+            Text(text = "Show Rewarded2")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

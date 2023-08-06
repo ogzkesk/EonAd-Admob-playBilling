@@ -21,7 +21,39 @@ class EonInterstitialAd() {
 
     var interstitialAd: InterstitialAd? = null
 
-    internal fun loadInterstitialAd(
+
+    internal fun showInterstitialAd(
+        context: Context,
+        adUnitId: String
+    ){
+        if(interstitialAd != null){
+            interstitialAd!!.show(context as Activity)
+            interFullScreenContentCallback(context,adUnitId,null)
+            return
+        }
+
+        loadInterstitialAd(context,adUnitId)
+    }
+
+    internal fun showInterstitialAd(
+        context: Context,
+        adUnitId: String,
+        eonAdCallback: EonAdCallback
+    ){
+        if(interstitialAd != null){
+            interstitialAd!!.show(context as Activity)
+            interFullScreenContentCallback(
+                context,
+                adUnitId,
+                eonAdCallback
+            )
+            return
+        }
+
+        loadInterstitialAd(context,adUnitId,eonAdCallback)
+    }
+
+    private fun loadInterstitialAd(
         context: Context,
         adUnitId: String,
         eonAdCallback: EonAdCallback
@@ -52,10 +84,18 @@ class EonInterstitialAd() {
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
                     super.onAdLoaded(interstitialAd)
+
                     this@EonInterstitialAd.interstitialAd = interstitialAd
                     eonAdCallback.onInterstitialAdLoaded(this@EonInterstitialAd)
-                    interFullScreenContentCallback(eonAdCallback)
+
+                    interFullScreenContentCallback(
+                        context,
+                        adUnitId,
+                        eonAdCallback
+                    )
+
                     interstitialAd.show(context)
+
                     Handler(Looper.getMainLooper()).apply {
                         postDelayed({
                             rootView.removeView(loadingView)
@@ -67,7 +107,8 @@ class EonInterstitialAd() {
         )
     }
 
-    internal fun loadInterstitialAd(context: Context,adUnitId: String){
+    private fun loadInterstitialAd(context: Context,adUnitId: String){
+
         val root : ViewGroup? = null
         val loadingView = (context as Activity).layoutInflater.inflate(
             R.layout.loading_ad, root
@@ -87,9 +128,11 @@ class EonInterstitialAd() {
                     context.showToast(R.string.ad_error)
                 }
 
-                override fun onAdLoaded(p0: InterstitialAd) {
-                    super.onAdLoaded(p0)
-                    p0.show(context)
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    super.onAdLoaded(ad)
+                    interstitialAd = ad
+                    interFullScreenContentCallback(context,adUnitId,null)
+                    ad.show(context)
                     Handler(Looper.getMainLooper()).apply {
                         postDelayed({
                             rootView.removeView(loadingView)
@@ -97,35 +140,66 @@ class EonInterstitialAd() {
                     }
                 }
             })
+
     }
 
-    private fun interFullScreenContentCallback(callback: EonAdCallback) {
+
+    private fun interFullScreenContentCallback(
+        context: Context,
+        adUnitId: String,
+        callback: EonAdCallback?
+    ) {
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 super.onAdClicked()
-                callback.onAdClicked()
+                callback?.onAdClicked()
             }
 
             override fun onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent()
-                callback.onAdDismissedFullScreenContent()
-                callback.onAdClosed()
+                callback?.onAdDismissedFullScreenContent()
+                callback?.onAdClosed()
+                interstitialAd = null
+                onlyLoad(context,adUnitId)
             }
 
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                 super.onAdFailedToShowFullScreenContent(p0)
-                callback.onAdFailedToShowFullScreenContent(EonAdError(p0))
+                callback?.onAdFailedToShowFullScreenContent(EonAdError(p0))
             }
 
             override fun onAdImpression() {
                 super.onAdImpression()
-                callback.onAdImpression()
+                callback?.onAdImpression()
             }
 
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
-                callback.onAdShowedFullScreenContent()
+                callback?.onAdShowedFullScreenContent()
             }
         }
+    }
+
+    private fun onlyLoad(context: Context,adUnitId: String){
+
+        val request = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            context,
+            adUnitId,
+            request,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    super.onAdFailedToLoad(error)
+                    Log.d(TAG, "InterstitialAd Loaded")
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onAdLoaded(interstitialAd)
+                    this@EonInterstitialAd.interstitialAd = interstitialAd
+                    Log.d(TAG, "InterstitialAd Loaded")
+                }
+            }
+        )
     }
 }

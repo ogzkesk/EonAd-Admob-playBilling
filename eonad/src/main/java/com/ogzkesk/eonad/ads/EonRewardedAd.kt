@@ -21,7 +21,38 @@ class EonRewardedAd() {
 
     var rewardedAd: RewardedAd? = null
 
-    internal fun loadRewardedAd(
+    internal fun showRewardedAd(
+        context: Context,
+        adUnitId: String
+    ){
+        if(rewardedAd != null){
+            rewardedAd!!.show(context as Activity){}
+            rewardedFullScreenContentCallback(context,adUnitId,null)
+            return
+        }
+
+        loadRewardedAd(context,adUnitId)
+    }
+
+    internal fun showRewardedAd(
+        context: Context,
+        adUnitId: String,
+        eonAdCallback: EonAdCallback
+    ){
+        if(rewardedAd != null){
+            rewardedAd!!.show(context as Activity){}
+            rewardedFullScreenContentCallback(
+                context,
+                adUnitId,
+                eonAdCallback
+            )
+            return
+        }
+
+        loadRewardedAd(context,adUnitId,eonAdCallback)
+    }
+
+    private fun loadRewardedAd(
         context: Context,
         adUnitId: String,
         eonAdCallback: EonAdCallback
@@ -54,7 +85,11 @@ class EonRewardedAd() {
 
                     this@EonRewardedAd.rewardedAd = rewardedAd
                     eonAdCallback.onRewardedAdLoaded(this@EonRewardedAd)
-                    rewardedFullScreenContentCallback(eonAdCallback)
+                    rewardedFullScreenContentCallback(
+                        context,
+                        adUnitId,
+                        eonAdCallback
+                    )
 
                     rewardedAd.show(context) { reward ->
                         Log.d(TAG, "RewardedAd Loaded:: $rewardedAd")
@@ -71,7 +106,7 @@ class EonRewardedAd() {
         )
     }
 
-    internal fun loadRewardedAd(context: Context, adUnitId: String){
+    private fun loadRewardedAd(context: Context, adUnitId: String){
         val root : ViewGroup? = null
         val loadingView = (context as Activity).layoutInflater.inflate(
             R.layout.loading_ad, root
@@ -91,9 +126,11 @@ class EonRewardedAd() {
                     context.showToast(R.string.ad_error)
                 }
 
-                override fun onAdLoaded(p0: RewardedAd) {
-                    super.onAdLoaded(p0)
-                    p0.show(context) {}
+                override fun onAdLoaded(ad: RewardedAd) {
+                    super.onAdLoaded(ad)
+                    this@EonRewardedAd.rewardedAd = ad
+                    rewardedFullScreenContentCallback(context,adUnitId,null)
+                    ad.show(context) {}
                     Handler(Looper.getMainLooper()).apply {
                         postDelayed({
                             rootView.removeView(loadingView)
@@ -104,34 +141,62 @@ class EonRewardedAd() {
         )
     }
 
-    private fun rewardedFullScreenContentCallback(callback: EonAdCallback) {
+    private fun rewardedFullScreenContentCallback(
+        context: Context,
+        adUnitId: String,
+        callback: EonAdCallback?
+    ) {
         rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 super.onAdClicked()
-                callback.onAdClicked()
+                callback?.onAdClicked()
             }
 
             override fun onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent()
-                callback.onAdDismissedFullScreenContent()
-                callback.onAdClosed()
+                callback?.onAdDismissedFullScreenContent()
+                callback?.onAdClosed()
+                rewardedAd = null
+                onlyLoad(context,adUnitId)
             }
 
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                 super.onAdFailedToShowFullScreenContent(p0)
-                callback.onAdFailedToShowFullScreenContent(EonAdError(p0))
+                callback?.onAdFailedToShowFullScreenContent(EonAdError(p0))
             }
 
             override fun onAdImpression() {
                 super.onAdImpression()
-                callback.onAdImpression()
+                callback?.onAdImpression()
             }
 
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
-                callback.onAdShowedFullScreenContent()
+                callback?.onAdShowedFullScreenContent()
             }
         }
+    }
+
+    private fun onlyLoad(
+        context: Context,
+        adUnitId: String
+    ){
+        val request = AdRequest.Builder().build()
+        RewardedAd.load(
+            context,
+            adUnitId,
+            request,
+            object : RewardedAdLoadCallback() {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    super.onAdFailedToLoad(p0)
+                }
+
+                override fun onAdLoaded(p0: RewardedAd) {
+                    super.onAdLoaded(p0)
+                    rewardedAd = p0
+                }
+            }
+        )
     }
 }
 

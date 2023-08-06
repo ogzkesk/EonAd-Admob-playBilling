@@ -4,7 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.view.View
 import com.google.android.gms.ads.MobileAds
-import com.ogzkesk.eonad.ads.*
+import com.ogzkesk.eonad.ads.EonBannerAd
+import com.ogzkesk.eonad.ads.EonInterstitialAd
+import com.ogzkesk.eonad.ads.EonNativeAd
+import com.ogzkesk.eonad.ads.EonResumeAd
+import com.ogzkesk.eonad.ads.EonRewardedAd
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "EonAd"
@@ -103,7 +107,7 @@ class EonAd private constructor() {
     }
 
     fun loadRewardedAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
-        rewardedAd.loadRewardedAd(
+        rewardedAd.showRewardedAd(
             context,
             adUnitId,
             eonAdCallback
@@ -111,12 +115,12 @@ class EonAd private constructor() {
     }
 
     fun loadRewardedAd(context: Context, adUnitId: String) {
-        rewardedAd.loadRewardedAd(context, adUnitId)
+        rewardedAd.showRewardedAd(context, adUnitId)
     }
 
 
     fun loadInterstitialAd(context: Context, adUnitId: String, eonAdCallback: EonAdCallback) {
-        interstitialAd.loadInterstitialAd(
+        interstitialAd.showInterstitialAd(
             context,
             adUnitId,
             eonAdCallback
@@ -124,7 +128,7 @@ class EonAd private constructor() {
     }
 
     fun loadInterstitialAd(context: Context, adUnitId: String) {
-        interstitialAd.loadInterstitialAd(context, adUnitId)
+        interstitialAd.showInterstitialAd(context, adUnitId)
     }
 
 
@@ -137,7 +141,7 @@ class EonAd private constructor() {
         if(firstTimeToLoadInterval){
             firstTimeToLoadInterval = false
             interstitialInterval = System.currentTimeMillis()
-            interstitialAd.loadInterstitialAd(context,adUnitId)
+            interstitialAd.showInterstitialAd(context,adUnitId)
             return
         }
 
@@ -147,7 +151,7 @@ class EonAd private constructor() {
 
         if(currentTime - sInterval > interstitialTime){
             interstitialInterval = System.currentTimeMillis()
-            interstitialAd.loadInterstitialAd(context,adUnitId)
+            interstitialAd.showInterstitialAd(context,adUnitId)
         }
     }
 
@@ -160,7 +164,7 @@ class EonAd private constructor() {
         if(firstTimeToLoadInterval){
             firstTimeToLoadInterval = false
             interstitialInterval = System.currentTimeMillis()
-            interstitialAd.loadInterstitialAd(context,adUnitId,eonAdCallback)
+            interstitialAd.showInterstitialAd(context,adUnitId,eonAdCallback)
             return
         }
 
@@ -170,7 +174,7 @@ class EonAd private constructor() {
 
         if(currentTime - sInterval > interstitialTime){
             interstitialInterval = System.currentTimeMillis()
-            interstitialAd.loadInterstitialAd(context,adUnitId,eonAdCallback)
+            interstitialAd.showInterstitialAd(context,adUnitId,eonAdCallback)
         }
 
     }
