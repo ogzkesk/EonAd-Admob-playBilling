@@ -357,7 +357,7 @@ class App : Application(){
 
 ```kotlin
     Iap.getInstance().consume(PurchaseIap){ error -> 
-        if(error == null){
+        if(error != null){
             // check error
         }
     }
