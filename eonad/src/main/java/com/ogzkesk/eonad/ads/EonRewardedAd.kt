@@ -40,7 +40,11 @@ class EonRewardedAd() {
         eonAdCallback: EonAdCallback
     ){
         if(rewardedAd != null){
-            rewardedAd!!.show(context as Activity){}
+
+            rewardedAd!!.show(context as Activity){ reward ->
+                eonAdCallback.onRewardEarned(EonRewardedAdItem(reward))
+            }
+
             rewardedFullScreenContentCallback(
                 context,
                 adUnitId,

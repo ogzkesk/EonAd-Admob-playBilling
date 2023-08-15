@@ -2,6 +2,7 @@ package com.ogzkesk.ad.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -10,11 +11,14 @@ import com.ogzkesk.ad.BuildConfig
 import com.ogzkesk.ad.databinding.ActivitySecondBinding
 import com.ogzkesk.eonad.BannerAdSize
 import com.ogzkesk.eonad.EonAd
+import com.ogzkesk.eonad.EonAdCallback
+import com.ogzkesk.eonad.EonRewardedAdItem
 import com.ogzkesk.eonad.NativeAdTemplate
 import com.ogzkesk.eonad.billing.Iap
 import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.launch
 
+private const val TAG = "SecondActivity"
 class SecondActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySecondBinding
@@ -68,7 +72,16 @@ class SecondActivity : AppCompatActivity() {
             }
 
             btnShowRewardedAd.setOnClickListener {
-                EonAd.getInstance().loadRewardedAd(this@SecondActivity, BuildConfig.ad_rewarded_id)
+                EonAd.getInstance().loadRewardedAd(
+                    this@SecondActivity,
+                    BuildConfig.ad_rewarded_id,
+                    object : EonAdCallback {
+                        override fun onRewardEarned(rewardItem: EonRewardedAdItem) {
+                            Log.d(TAG,"reward : ${rewardItem.amount}")
+                            super.onRewardEarned(rewardItem)
+                        }
+                    }
+                )
             }
 
             btnEnableResumeAds.setOnClickListener { EonAd.getInstance().enableResumeAds() }
