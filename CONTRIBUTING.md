@@ -23,7 +23,7 @@ To set up the project locally, follow these steps:
 1. Clone the repository:
 
 git clone https://github.com/ogzkesk/EonAd.git
-cd your-project
+cd EonAd
 
 2. Install dependencies:
 
